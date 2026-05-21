@@ -13,20 +13,26 @@ export interface Note {
 
 export const handler = define.handlers({
   async GET(ctx) {
-    const kv = await Deno.openKv();
-    const entries = kv.list({ prefix: ["notes"] });
-    const notes: Note[] = [];
-    
-    for await (const entry of entries) {
-      notes.push(entry.value as Note);
+    try {
+      const kv = await Deno.openKv();
+      const entries = kv.list({ prefix: ["notes"] });
+      const notes: Note[] = [];
+      
+      for await (const entry of entries) {
+        notes.push(entry.value as Note);
+      }
+      
+      // Sort by last modified time (descending)
+      notes.sort((a, b) => b.mtime - a.mtime);
+      
+      return {
+        data: { notes, error: null }
+      };
+    } catch (e) {
+      return {
+        data: { notes: [], error: e.stack || e.message || String(e) }
+      };
     }
-    
-    // Sort by last modified time (descending)
-    notes.sort((a, b) => b.mtime - a.mtime);
-    
-    return {
-      data: { notes }
-    };
   }
 });
 
@@ -47,7 +53,7 @@ function formatDate(timestamp: number): string {
 }
 
 export default define.page<typeof handler>(function Home({ data }) {
-  const { notes } = data;
+  const { notes, error } = data;
   
   return (
     <div class="min-h-screen bg-[#0b0d10] text-[#e3e6eb] selection:bg-[#2563eb] selection:text-white pb-16">
@@ -81,6 +87,22 @@ export default define.page<typeof handler>(function Home({ data }) {
             A real-time collection of notes synchronized directly from Obsidian into Deno KV.
           </p>
         </div>
+
+        {error && (
+          <div style={{
+            border: "1px solid rgba(239, 68, 68, 0.5)",
+            backgroundColor: "rgba(127, 29, 29, 0.2)",
+            color: "#fca5a5",
+            padding: "1rem",
+            borderRadius: "0.75rem",
+            marginBottom: "1.5rem",
+            fontFamily: "monospace",
+            fontSize: "0.875rem",
+            whiteSpace: "pre-wrap"
+          }}>
+            <strong>Error:</strong> {error}
+          </div>
+        )}
 
         {notes.length === 0 ? (
           <div class="border border-dashed border-[#21262d] rounded-2xl p-16 text-center bg-[#161b22]/30 backdrop-blur-sm">
