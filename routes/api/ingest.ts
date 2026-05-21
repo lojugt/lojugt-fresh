@@ -27,7 +27,7 @@ export const handler = define.handlers({
       const body = await req.json();
       const { action, path, title } = body;
 
-      if (!action || !path) {
+      if (!action || (action !== "wipe" && !path)) {
         return new Response(
           JSON.stringify({
             error: "Missing required fields: action and path.",
@@ -39,7 +39,7 @@ export const handler = define.handlers({
         );
       }
 
-      const cleanPath = path.endsWith(".md") ? path.slice(0, -3) : path;
+      const cleanPath = path && path.endsWith(".md") ? path.slice(0, -3) : path;
       const kv = await Deno.openKv();
 
       if (action === "publish") {
@@ -79,6 +79,24 @@ export const handler = define.handlers({
           JSON.stringify({
             success: true,
             message: `Successfully unpublished: ${path}`,
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      } else if (action === "wipe") {
+        const entries = kv.list({ prefix: ["notes"] });
+        let wipeCount = 0;
+        for await (const entry of entries) {
+          await kv.delete(entry.key);
+          wipeCount++;
+        }
+        console.log(`[WIPE] Deleted ${wipeCount} notes from KV database.`);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: `Successfully wiped ${wipeCount} notes from KV.`,
           }),
           {
             status: 200,

@@ -20,9 +20,12 @@ export const handler = define.handlers({
     }
 
     const decodedPath = decodeURIComponent(path);
-    const cleanPath = decodedPath.endsWith(".md")
-      ? decodedPath.slice(0, -3)
+    const noTrailingSlash = decodedPath.endsWith("/")
+      ? decodedPath.slice(0, -1)
       : decodedPath;
+    const cleanPath = noTrailingSlash.endsWith(".md")
+      ? noTrailingSlash.slice(0, -3)
+      : noTrailingSlash;
     try {
       const kv = await Deno.openKv();
       const result = await kv.get(["notes", cleanPath]);
