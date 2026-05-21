@@ -15,6 +15,10 @@
       "tags": [
         "fresh",
         "recommended"
+      ],
+      "exclude": [
+        "react-no-danger",
+        "no-explicit-any"
       ]
     }
   },
@@ -32,7 +36,8 @@
       "dom",
       "dom.asynciterable",
       "dom.iterable",
-      "deno.ns"
+      "deno.ns",
+      "deno.unstable"
     ],
     "jsx": "precompile",
     "jsxImportSource": "preact",
