@@ -28,13 +28,14 @@ export const handler = define.handlers({
         });
       }
 
+      const cleanPath = path.endsWith(".md") ? path.slice(0, -3) : path;
       const kv = await Deno.openKv();
 
       if (action === "publish") {
         const { content, frontmatter, tags, mtime, ctime } = body;
         
         const noteObject = {
-          path,
+          path: cleanPath,
           title,
           content,
           frontmatter: frontmatter || {},
@@ -44,20 +45,20 @@ export const handler = define.handlers({
           ingestedAt: Date.now(),
         };
 
-        // Save to Deno KV
-        await kv.set(["notes", path], noteObject);
+        // Save to Deno KV using the clean path
+        await kv.set(["notes", cleanPath], noteObject);
         
-        console.log(`[PUBLISH] Saved note: ${path} (Title: ${title})`);
+        console.log(`[PUBLISH] Saved note: ${cleanPath} (Title: ${title})`);
         return new Response(JSON.stringify({ success: true, message: `Successfully published: ${title}` }), {
           status: 200,
           headers: { "Content-Type": "application/json" },
         });
 
       } else if (action === "unpublish") {
-        // Delete from Deno KV
-        await kv.delete(["notes", path]);
+        // Delete from Deno KV using the clean path
+        await kv.delete(["notes", cleanPath]);
 
-        console.log(`[UNPUBLISH] Deleted note: ${path}`);
+        console.log(`[UNPUBLISH] Deleted note: ${cleanPath}`);
         return new Response(JSON.stringify({ success: true, message: `Successfully unpublished: ${path}` }), {
           status: 200,
           headers: { "Content-Type": "application/json" },

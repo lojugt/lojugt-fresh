@@ -20,15 +20,16 @@ export const handler = define.handlers({
     }
 
     const decodedPath = decodeURIComponent(path);
+    const cleanPath = decodedPath.endsWith(".md") ? decodedPath.slice(0, -3) : decodedPath;
     try {
       const kv = await Deno.openKv();
-      const result = await kv.get(["notes", decodedPath]);
+      const result = await kv.get(["notes", cleanPath]);
 
       if (!result.value) {
         return {
           data: {
             note: null,
-            error: `Note "${decodedPath}" not found in Deno KV database.`
+            error: `Note "${cleanPath}" not found in Deno KV database.`
           }
         };
       }
@@ -160,6 +161,16 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           <article>
             {/* Note Metadata Header */}
             <div class="mb-10 pb-8 border-b border-[#1b1c24]">
+              {note.tags && note.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {note.tags.map((tag) => (
+                    <span class="text-[9px] px-2 py-0.5 border border-[#7aa2f7]/30 bg-[#7aa2f7]/5 text-[#7aa2f7] uppercase tracking-wider font-bold">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              
               <h1 class="text-2xl font-bold text-white mb-4 tracking-tight">
                 {note.title}
               </h1>
@@ -174,14 +185,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   </div>
                 )}
               </div>
-
-              {note.tags && note.tags.length > 0 && (
-                <div class="flex flex-wrap gap-3 mt-4 text-[10px] text-[#7aa2f7]">
-                  {note.tags.map((tag) => (
-                    <span>#{tag}</span>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Rendered Markdown Body */}
