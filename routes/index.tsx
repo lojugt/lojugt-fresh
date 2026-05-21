@@ -72,8 +72,11 @@ export default define.page<typeof handler>(function Home({ data }) {
               <span class="text-xs block text-gray-500 font-mono">Deno KV Publishing</span>
             </div>
           </div>
-          <div class="text-sm font-mono text-[#6b7280]">
-            {notes.length} note{notes.length === 1 ? "" : "s"} online
+          <div class="flex items-center gap-2 bg-[#161b22] border border-[#21262d] px-3.5 py-1.5 rounded-full shadow-inner">
+            <span class={`w-2 h-2 rounded-full ${notes.length > 0 ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse' : 'bg-yellow-500 animate-pulse'}`} />
+            <span class="text-xs font-mono font-medium text-[#c9d1d9]">
+              {notes.length} note{notes.length === 1 ? "" : "s"} live
+            </span>
           </div>
         </div>
       </header>
@@ -86,6 +89,20 @@ export default define.page<typeof handler>(function Home({ data }) {
           <p class="text-[#8b949e] text-lg max-w-2xl">
             A real-time collection of notes synchronized directly from Obsidian into Deno KV.
           </p>
+          
+          <div class="flex gap-6 mt-6">
+            <div class="bg-[#161b22]/50 border border-[#21262d]/60 rounded-xl px-5 py-3 backdrop-blur-sm">
+              <span class="text-xs font-mono text-[#8b949e] block mb-1">Total Notes</span>
+              <span class="text-3xl font-extrabold text-white tracking-tight">{notes.length}</span>
+            </div>
+            <div class="bg-[#161b22]/50 border border-[#21262d]/60 rounded-xl px-5 py-3 backdrop-blur-sm">
+              <span class="text-xs font-mono text-[#8b949e] block mb-1">Database Status</span>
+              <span class={`text-xs font-mono flex items-center gap-1.5 mt-2 ${error ? 'text-red-400' : 'text-green-400'}`}>
+                <span class={`w-1.5 h-1.5 rounded-full inline-block ${error ? 'bg-red-400' : 'bg-green-400 animate-pulse'}`} />
+                {error ? 'Connection Error' : 'Connected'}
+              </span>
+            </div>
+          </div>
         </div>
 
         {error && (
@@ -105,15 +122,17 @@ export default define.page<typeof handler>(function Home({ data }) {
         )}
 
         {notes.length === 0 ? (
-          <div class="border border-dashed border-[#21262d] rounded-2xl p-16 text-center bg-[#161b22]/30 backdrop-blur-sm">
-            <div class="w-16 h-16 bg-[#21262d] rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
+          <div class="border border-[#21262d]/40 rounded-2xl p-12 text-center bg-[#161b22]/20 backdrop-blur-sm max-w-xl mx-auto mt-8">
+            <div class="flex items-center justify-center gap-2 mb-4 text-[#58a6ff]">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              </span>
+              <span class="text-xs font-mono tracking-wider uppercase">System Online & Ready</span>
             </div>
-            <h3 class="text-xl font-semibold text-white mb-2">No notes published yet</h3>
-            <p class="text-[#8b949e] max-w-md mx-auto mb-6">
-              Tag your Obsidian notes with <code class="bg-[#21262d] px-1.5 py-0.5 rounded text-white text-sm">publish: true</code> in frontmatter and trigger the sync menu item.
+            <h3 class="text-lg font-semibold text-white mb-2">Awaiting Obsidian Publish</h3>
+            <p class="text-sm text-[#8b949e] mb-4">
+              To publish a note, add <code class="bg-[#21262d] px-1.5 py-0.5 rounded text-[#58a6ff] text-xs font-mono">publish: true</code> to its frontmatter in Obsidian and trigger the sync menu item.
             </p>
           </div>
         ) : (
