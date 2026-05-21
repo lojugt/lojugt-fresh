@@ -20,18 +20,33 @@ export const handler = define.handlers({
     }
 
     const decodedPath = decodeURIComponent(path);
-    const kv = await Deno.openKv();
-    const result = await kv.get(["notes", decodedPath]);
+    try {
+      const kv = await Deno.openKv();
+      const result = await kv.get(["notes", decodedPath]);
 
-    if (!result.value) {
-      return new Response("Note not found in Deno KV database", { status: 404 });
+      if (!result.value) {
+        return {
+          data: {
+            note: null,
+            error: `Note "${decodedPath}" not found in Deno KV database.`
+          }
+        };
+      }
+
+      return {
+        data: {
+          note: result.value as Note,
+          error: null
+        },
+      };
+    } catch (e) {
+      return {
+        data: {
+          note: null,
+          error: e.stack || e.message || String(e)
+        }
+      };
     }
-
-    return {
-      data: {
-        note: result.value as Note,
-      },
-    };
   },
 });
 
@@ -46,131 +61,140 @@ function formatDate(timestamp: number): string {
 }
 
 export default define.page<typeof handler>(function NoteView({ data }) {
-  const { note } = data;
+  const { note, error } = data;
   
   // Render markdown to HTML using Deno GFM
-  const htmlContent = render(note.content);
+  const htmlContent = note ? render(note.content) : "";
 
   return (
-    <div class="min-h-screen bg-[#0b0d10] text-[#e3e6eb] selection:bg-[#2563eb] selection:text-white pb-24">
+    <div class="min-h-screen bg-[#08090c] text-[#a9b1d6] selection:bg-[#1a1b26] selection:text-[#7aa2f7] pb-24 font-mono">
       {/* Scope Deno GFM Styles */}
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <style dangerouslySetInnerHTML={{ __html: `
+        body {
+          font-family: 'JetBrains Mono', monospace !important;
+          background-color: #08090c !important;
+        }
         /* Overwrite GFM defaults to match our premium dark theme */
         .markdown-body {
           background-color: transparent !important;
-          color: #c9d1d9 !important;
-          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
-          font-size: 16px;
+          color: #a9b1d6 !important;
+          font-family: 'JetBrains Mono', monospace !important;
+          font-size: 14px;
           line-height: 1.8;
         }
         .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
-          color: #f0f6fc !important;
-          font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-          border-bottom: 1px solid #21262d !important;
-          margin-top: 1.8em;
-          margin-bottom: 0.6em;
+          color: #ffffff !important;
+          font-family: 'JetBrains Mono', monospace !important;
+          border-bottom: 1px solid #1b1c24 !important;
+          margin-top: 2em;
+          margin-bottom: 0.8em;
           font-weight: 700;
         }
         .markdown-body pre {
-          background-color: #161b22 !important;
-          border: 1px solid #30363d !important;
-          border-radius: 12px !important;
+          background-color: #12131a !important;
+          border: 1px solid #1b1c24 !important;
+          border-radius: 4px !important;
         }
         .markdown-body code {
-          background-color: rgba(110, 118, 129, 0.2) !important;
-          border-radius: 6px !important;
-          color: #ff7b72 !important;
+          background-color: rgba(86, 95, 137, 0.2) !important;
+          border-radius: 4px !important;
+          color: #f7768e !important;
+          font-family: 'JetBrains Mono', monospace !important;
+          font-size: 0.9em;
+          padding: 0.2em 0.4em !important;
         }
         .markdown-body pre code {
-          color: #c9d1d9 !important;
+          color: #a9b1d6 !important;
           background-color: transparent !important;
+          padding: 0 !important;
         }
         .markdown-body blockquote {
-          border-left: 0.25em solid #30363d !important;
-          color: #8b949e !important;
-          background-color: #161b22/30 !important;
+          border-left: 0.25em solid #1b1c24 !important;
+          color: #565f89 !important;
+          background-color: transparent !important;
           padding: 0 1em !important;
         }
         .markdown-body table tr {
-          background-color: #0d1117 !important;
-          border-top: 1px solid #21262d !important;
+          background-color: #12131a/40 !important;
+          border-top: 1px solid #1b1c24 !important;
         }
         .markdown-body table tr:nth-child(2n) {
-          background-color: #161b22/40 !important;
+          background-color: #12131a/20 !important;
         }
         .markdown-body table th, .markdown-body table td {
-          border: 1px solid #30363d !important;
+          border: 1px solid #1b1c24 !important;
+          padding: 6px 13px !important;
         }
         .markdown-body img {
-          border-radius: 12px;
-          border: 1px solid #30363d;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-          margin: 1.5rem 0;
+          border-radius: 4px;
+          border: 1px solid #1b1c24;
+          margin: 2rem 0;
         }
       ` }} />
 
-      <header class="border-b border-[#1f242e] bg-[#0d1117]/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header class="border-b border-[#1b1c24] bg-[#0b0c10]/90 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-8 py-5 flex items-center justify-between">
           <a
             href="/"
-            class="flex items-center gap-2 text-sm text-[#8b949e] hover:text-white transition-colors duration-200 group"
+            class="flex items-center gap-2 text-xs text-[#565f89] hover:text-[#7aa2f7] transition-colors duration-200 group"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to notes
+            [BACK_TO_NOTES]
           </a>
-          <div class="text-xs font-mono text-gray-500">
-            {note.path}
+          <div class="text-[10px] text-[#565f89]">
+            {note ? note.path : "ERROR"}
           </div>
         </div>
       </header>
 
-      <main class="max-w-4xl mx-auto px-6 mt-12">
-        <article>
-          {/* Note Metadata Header */}
-          <div class="mb-10 pb-8 border-b border-[#21262d]">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
-              {note.title}
-            </h1>
-            
-            <div class="flex flex-wrap items-center gap-y-4 gap-x-6 text-sm text-[#8b949e] font-mono">
-              <div class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>Updated: {formatDate(note.mtime)}</span>
+      <main class="max-w-4xl mx-auto px-8 mt-12">
+        {error ? (
+          <div class="border border-red-500/20 bg-red-950/10 text-red-400 p-6 font-mono text-xs">
+            <h2 class="text-sm font-bold text-red-400 mb-2">[ERROR_LOADING_NOTE]</h2>
+            <p>{error}</p>
+          </div>
+        ) : note ? (
+          <article>
+            {/* Note Metadata Header */}
+            <div class="mb-10 pb-8 border-b border-[#1b1c24]">
+              <h1 class="text-2xl font-bold text-white mb-4 tracking-tight">
+                {note.title}
+              </h1>
+              
+              <div class="flex flex-wrap items-center gap-y-2 gap-x-6 text-[10px] text-[#565f89]">
+                <div class="flex items-center gap-1.5">
+                  <span>LAST_MODIFIED: {formatDate(note.mtime)}</span>
+                </div>
+                {note.ctime && (
+                  <div class="flex items-center gap-1.5">
+                    <span>CREATED: {formatDate(note.ctime)}</span>
+                  </div>
+                )}
               </div>
-              {note.ctime && (
-                <div class="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <span>Created: {formatDate(note.ctime)}</span>
+
+              {note.tags && note.tags.length > 0 && (
+                <div class="flex flex-wrap gap-3 mt-4 text-[10px] text-[#7aa2f7]">
+                  {note.tags.map((tag) => (
+                    <span>#{tag}</span>
+                  ))}
                 </div>
               )}
             </div>
 
-            {note.tags && note.tags.length > 0 && (
-              <div class="flex flex-wrap gap-2 mt-6">
-                {note.tags.map((tag) => (
-                  <span class="text-xs px-3 py-1 rounded-full bg-[#161b22] border border-[#21262d] text-[#58a6ff]">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Rendered Markdown Body */}
-          <div
-            class="markdown-body"
-            data-color-mode="dark"
-            data-dark-theme="dark"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
-        </article>
+            {/* Rendered Markdown Body */}
+            <div
+              class="markdown-body"
+              data-color-mode="dark"
+              data-dark-theme="dark"
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
+          </article>
+        ) : (
+          <p class="text-xs text-[#565f89]">[NO_NOTE_DATA_AVAILABLE]</p>
+        )}
       </main>
     </div>
   );
