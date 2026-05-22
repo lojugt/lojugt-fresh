@@ -106,10 +106,17 @@ export default define.page<typeof handler>(function NoteView({ data }) {
         <details class="loju-header-details">
           <summary class="loju-header-summary">
             <div class="loju-page-header-inner">
-              <a href="https://loju.ca" class="loju-brand" onclick="event.stopPropagation();">
-                LOJU
-              </a>
-              <div class="loju-page-path-container">
+              <div class="loju-page-header-left">
+                <a href="https://loju.ca" class="loju-brand" onclick="event.stopPropagation();">
+                  LOJU
+                </a>
+              </div>
+              <div class="loju-page-header-middle">
+                <span class="loju-page-path">
+                  {note ? note.path : "ERROR"}
+                </span>
+              </div>
+              <div class="loju-page-header-right">
                 <button
                   class="loju-theme-toggle-btn"
                   title="Toggle day/night mode"
@@ -118,10 +125,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   <span class="loju-toggle-icon">🍍</span>
                   <span id="loju-theme-status">LUX</span>
                 </button>
-                <span class="loju-page-path">
-                  {note ? note.path : "ERROR"}
-                </span>
-                <span class="loju-info-indicator"></span>
               </div>
             </div>
           </summary>
