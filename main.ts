@@ -20,5 +20,20 @@ const exampleLoggerMiddleware = define.middleware((ctx) => {
 });
 app.use(exampleLoggerMiddleware);
 
+const trailingSlashRedirectMiddleware = define.middleware((ctx) => {
+  const url = new URL(ctx.req.url);
+  if (url.pathname !== "/" && url.pathname.endsWith("/")) {
+    url.pathname = url.pathname.slice(0, -1);
+    return new Response(null, {
+      status: 307,
+      headers: {
+        location: url.pathname + url.search,
+      },
+    });
+  }
+  return ctx.next();
+});
+app.use(trailingSlashRedirectMiddleware);
+
 // Include file-system based routes here
 app.fsRoutes();
