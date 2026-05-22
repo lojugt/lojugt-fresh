@@ -113,16 +113,13 @@ export function processMarkdownFeatures(
 }
 
 export function processExternalLinks(html: string): string {
-  return html.replace(
-    /<a\s+([^>]*?)href="(https?:\/\/([^"]+))"([^>]*?)>/g,
-    (match, beforeHref, fullUrl, _urlPath, afterHref) => {
-      if (
-        beforeHref.includes('target="_blank"') ||
-        afterHref.includes('target="_blank"')
-      ) {
-        return match;
+  return html.replace(/<a\s+([^>]*?)>/gi, (match, attributes) => {
+    const hrefMatch = attributes.match(/href=["'](https?:\/\/[^"']+)["']/i);
+    if (hrefMatch) {
+      if (!/target=["']_blank["']/i.test(attributes)) {
+        return `<a ${attributes} target="_blank" rel="noopener noreferrer">`;
       }
-      return `<a ${beforeHref}href="${fullUrl}"${afterHref} target="_blank" rel="noopener noreferrer">`;
-    },
-  );
+    }
+    return match;
+  });
 }
