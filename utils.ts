@@ -22,7 +22,7 @@ export interface Note {
   ingestedAt: number;
 }
 
-export function formatDate(timestamp: number): string {
+export function formatDate(timestamp: number | string): string {
   return new Date(timestamp).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",

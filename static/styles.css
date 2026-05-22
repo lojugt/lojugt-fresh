@@ -197,17 +197,18 @@ body {
 }
 
 .loju-note-meta-header {
-  margin-bottom: 2.5rem;
-  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #222222;
+  text-align: left;
 }
 
 .loju-note-tags {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .loju-note-tag {
@@ -225,25 +226,25 @@ body {
   font-size: 2rem;
   font-weight: 700;
   color: #ffffff;
-  text-align: center;
-  margin-bottom: 1rem;
+  text-align: left;
+  margin-bottom: 0.75rem;
   letter-spacing: -0.02em;
 }
 
 .loju-note-meta {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem 1.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
   font-size: 0.625rem;
   color: #777777;
+  text-align: left;
 }
 
 .loju-markdown {
   background-color: transparent;
   color: #ffffff;
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.8;
   max-width: 500px;
   margin: 0 auto;
@@ -260,7 +261,7 @@ body {
   margin-top: 2rem;
   margin-bottom: 0.8rem;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   border-bottom: none;
 }
 
@@ -278,12 +279,12 @@ body {
 }
 
 .loju-markdown a {
-  color: #58a6ff;
+  color: #ff79c6;
   text-decoration: underline;
 }
 
 .loju-markdown a:hover {
-  color: #79c0ff;
+  color: #ff92df;
 }
 
 .loju-markdown pre {
@@ -368,11 +369,12 @@ mark.highlight,
 }
 
 .loju-markdown .footnotes a[data-footnote-backref] {
-  color: #58a6ff;
+  color: #ff79c6;
   text-decoration: none;
 }
 
 .loju-markdown .footnotes a[data-footnote-backref]:hover {
+  color: #ff92df;
   text-decoration: underline;
 }
 

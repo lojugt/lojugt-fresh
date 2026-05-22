@@ -143,9 +143,9 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   <div>
                     <span>LAST_MODIFIED: {formatDate(note.mtime)}</span>
                   </div>
-                  {note.ctime && (
+                  {(note.frontmatter?.first_published || note.ctime) && (
                     <div>
-                      <span>CREATED: {formatDate(note.ctime)}</span>
+                      <span>CREATED: {formatDate(note.frontmatter.first_published || note.ctime)}</span>
                     </div>
                   )}
                 </div>
