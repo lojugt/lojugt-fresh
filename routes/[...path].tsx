@@ -120,37 +120,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
         {note
           ? (
             <article>
-              {/* Note Metadata Header */}
-              <div class="loju-note-meta-header">
-                {note.tags && note.tags.length > 0 && (
-                  <div class="loju-note-tags">
-                    {note.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        class="loju-note-tag"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <h1 class="loju-note-title">
-                  {note.title}
-                </h1>
-
-                <div class="loju-note-meta">
-                  <div>
-                    <span>LAST_MODIFIED: {formatDate(note.mtime)}</span>
-                  </div>
-                  {(note.frontmatter?.first_published || note.ctime) && (
-                    <div>
-                      <span>CREATED: {formatDate(note.frontmatter.first_published || note.ctime)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
               {/* Rendered Markdown Body */}
               <div
                 class="markdown-body loju-markdown"
