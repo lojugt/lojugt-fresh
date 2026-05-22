@@ -1,4 +1,5 @@
 import { define } from "../../utils.ts";
+import Sidebar from "../../islands/Sidebar.tsx";
 
 export interface Note {
   path: string;
@@ -60,7 +61,6 @@ function formatDate(timestamp: number): string {
 export default define.page<typeof handler>(function NotesIndex({ data }) {
   const { notes, error } = data;
   const recentNotes = notes.slice(0, 3);
-  const directoryNotes = [...notes].sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <div class="min-h-screen bg-black text-[#ffffff] pb-24 font-mono px-6">
@@ -146,32 +146,10 @@ export default define.page<typeof handler>(function NotesIndex({ data }) {
                   </article>
                 ))}
               </div>
-
-              {/* Full Directory */}
-              <section class="mt-20 pt-12 border-t border-[#222]">
-                <h2 class="text-[10px] uppercase tracking-[0.3em] text-[#555] mb-8 font-bold text-center">
-                  All Notes
-                </h2>
-                <ul class="space-y-4">
-                  {directoryNotes.map((note) => (
-                    <li key={note.path} class="flex items-baseline gap-2 text-xs">
-                      <a
-                        href={`/notes/${note.path}`}
-                        class="text-[#888] hover:text-[#58a6ff] hover:underline transition-colors whitespace-nowrap"
-                      >
-                        {note.title}
-                      </a>
-                      <span class="flex-grow border-b border-dotted border-[#222]"></span>
-                      <span class="text-[10px] text-[#444] whitespace-nowrap font-mono">
-                        {formatDate(note.mtime)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
             </div>
           )}
       </main>
+      <Sidebar notes={notes} />
     </div>
   );
 });

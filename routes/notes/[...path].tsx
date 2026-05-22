@@ -1,6 +1,7 @@
 import { define } from "../../utils.ts";
 import { CSS, render } from "@deno/gfm";
 import type { Note } from "./index.tsx";
+import Sidebar from "../../islands/Sidebar.tsx";
 
 // Syntax highlighting components for Deno GFM
 import "npm:prismjs@1.29.0/components/prism-typescript.js";
@@ -30,10 +31,17 @@ export const handler = define.handlers({
       const kv = await Deno.openKv();
       const result = await kv.get(["notes", cleanPath]);
 
+      const entries = kv.list({ prefix: ["notes"] });
+      const notes: Note[] = [];
+      for await (const entry of entries) {
+        notes.push(entry.value as Note);
+      }
+
       if (!result.value) {
         return {
           data: {
             note: null,
+            notes,
             error: `Note "${cleanPath}" not found in Deno KV database.`,
           },
         };
@@ -42,6 +50,7 @@ export const handler = define.handlers({
       return {
         data: {
           note: result.value as Note,
+          notes,
           error: null,
         },
       };
@@ -50,6 +59,7 @@ export const handler = define.handlers({
       return {
         data: {
           note: null,
+          notes: [],
           error: err.stack || err.message || String(err),
         },
       };
@@ -127,7 +137,7 @@ function processExternalLinks(html: string): string {
 }
 
 export default define.page<typeof handler>(function NoteView({ data }) {
-  const { note, error } = data;
+  const { note, notes, error } = data;
 
   let htmlContent = "";
   if (note) {
@@ -318,6 +328,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           )
           : <p class="text-xs text-[#555]">[NO_NOTE_DATA_AVAILABLE]</p>}
       </main>
+      <Sidebar notes={notes || []} currentPath={note?.path} />
     </div>
   );
 });
