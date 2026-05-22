@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Do+Hyeon&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Serif+JP:wght@700;900&family=Noto+Serif+KR:wght@700;900&display=swap');
+
 *,
 *::before,
 *::after {
@@ -32,11 +34,7 @@ html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
   font-size: 106.25%;
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  font-family: 'JetBrains Mono', monospace;
 }
 .transition-colors {
   transition-property: background-color, border-color, color, fill, stroke;
@@ -147,7 +145,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: 'JetBrains Mono', monospace;
   background-color: #000000;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
@@ -180,9 +178,10 @@ body {
 }
 
 .loju-brand {
-  font-size: 0.625rem;
+  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
   color: #ffffff;
   user-select: none;
 }
@@ -344,12 +343,13 @@ body {
 }
 
 .loju-note-title {
-  font-size: 2rem;
+  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
+  font-size: 2.25rem;
   font-weight: 700;
   color: #ffffff;
   text-align: left;
-  margin-bottom: 0.75rem;
-  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .loju-note-meta {
@@ -378,17 +378,17 @@ body {
 .loju-markdown h5,
 .loju-markdown h6 {
   color: #ffffff;
-  font-family: inherit;
-  margin-top: 2rem;
-  margin-bottom: 0.8rem;
+  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
   font-weight: 700;
   text-align: left;
   border-bottom: none;
 }
 
-.loju-markdown h1 { font-size: 1.8rem; }
-.loju-markdown h2 { font-size: 1.4rem; }
-.loju-markdown h3 { font-size: 1.2rem; }
+.loju-markdown h1 { font-size: 2rem; }
+.loju-markdown h2 { font-size: 1.5rem; }
+.loju-markdown h3 { font-size: 1.25rem; }
 
 .loju-markdown p,
 .loju-markdown ul,
@@ -513,10 +513,11 @@ mark.highlight,
 }
 
 .loju-empty-title {
-  font-size: 2.5rem;
+  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
+  font-size: 3rem;
   font-weight: 700;
-  letter-spacing: 0.25em;
-  padding-left: 0.25em;
+  letter-spacing: 0.1em;
+  padding-left: 0.1em;
 }
 
 .loju-back-link {
