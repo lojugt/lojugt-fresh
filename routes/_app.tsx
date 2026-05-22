@@ -7,7 +7,7 @@ export default define.page(function App({ Component, state }) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{state.title ?? "Lojugt Publishing"}</title>
+        <title>{state.title ?? "Loju"}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
