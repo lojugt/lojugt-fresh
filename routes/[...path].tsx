@@ -115,7 +115,14 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 [HOME]
               </a>
               <div class="loju-page-path-container">
-                <span class="loju-page-path">{note ? note.path : "ERROR"}</span>
+                <span
+                  class="loju-page-path loju-clickable-path"
+                  data-path={note ? note.path : ""}
+                  onclick="event.stopPropagation(); const path = this.getAttribute('data-path'); const shareUrl = window.location.origin + '/' + (path === 'index' ? '' : encodeURIComponent(path)); navigator.clipboard.writeText(shareUrl); const originalText = this.innerText; this.innerText = '[LINK COPIED!]'; this.style.color = '#ff79c6'; setTimeout(() => { this.innerText = originalText; this.style.color = ''; }, 2000);"
+                  title="Click to copy shareable link"
+                >
+                  {note ? note.path : "ERROR"}
+                </span>
                 <span class="loju-info-indicator"></span>
               </div>
             </div>
@@ -123,29 +130,13 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           {note && (
             <div class="loju-header-info-drawer">
               <div class="loju-info-row">
-                <span class="loju-info-key">PATH:</span>
-                <span class="loju-info-val">{note.path}</span>
-              </div>
-              <div class="loju-info-row">
                 <span class="loju-info-key">TITLE:</span>
                 <span class="loju-info-val">{note.title}</span>
-              </div>
-              <div class="loju-info-row">
-                <span class="loju-info-key">CREATED:</span>
-                <span class="loju-info-val">
-                  {formatDate(note.frontmatter?.first_published || note.ctime || 0)}
-                </span>
               </div>
               <div class="loju-info-row">
                 <span class="loju-info-key">UPDATED:</span>
                 <span class="loju-info-val">{formatDate(note.mtime)}</span>
               </div>
-              {note.frontmatter?.description && (
-                <div class="loju-info-row">
-                  <span class="loju-info-key">DESCRIPTION:</span>
-                  <span class="loju-info-val">{note.frontmatter.description}</span>
-                </div>
-              )}
               {note.tags && note.tags.length > 0 && (
                 <div class="loju-info-row">
                   <span class="loju-info-key">TAGS:</span>
@@ -154,16 +145,18 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   </span>
                 </div>
               )}
-              {Object.keys(note.frontmatter || {}).length > 0 && (
-                <div class="loju-info-row" style={{ flexDirection: "column", gap: "0.25rem" }}>
-                  <span class="loju-info-key">FRONTMATTER:</span>
-                  <pre class="loju-info-pre">
-                    {Object.entries(note.frontmatter)
-                      .map(([k, v]) => `  ${k}: ${typeof v === "object" ? JSON.stringify(v) : v}`)
-                      .join("\n")}
-                  </pre>
-                </div>
-              )}
+              <div class="loju-info-row">
+                <span class="loju-info-key">SHARE:</span>
+                <span class="loju-info-val">
+                  <button
+                    class="loju-share-btn"
+                    data-path={note.path}
+                    onclick="event.stopPropagation(); const path = this.getAttribute('data-path'); const shareUrl = window.location.origin + '/' + (path === 'index' ? '' : encodeURIComponent(path)); navigator.clipboard.writeText(shareUrl); const originalText = this.innerText; this.innerText = 'COPIED!'; this.style.color = '#ff79c6'; setTimeout(() => { this.innerText = originalText; this.style.color = ''; }, 2000);"
+                  >
+                    [COPY LINK]
+                  </button>
+                </span>
+              </div>
             </div>
           )}
         </details>
