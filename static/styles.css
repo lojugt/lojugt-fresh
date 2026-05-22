@@ -172,7 +172,7 @@ body {
 .loju-page-header-inner {
   max-width: 500px;
   margin: 0 auto;
-  padding: 1.25rem 1.5rem;
+  padding: 1.6rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -189,6 +189,95 @@ body {
 .loju-page-path {
   font-size: 0.625rem;
   color: #777777;
+}
+
+.loju-header-details summary {
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.loju-header-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.loju-header-summary {
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.loju-page-path-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loju-info-indicator {
+  font-size: 0.625rem;
+  color: #ff79c6;
+  font-weight: 700;
+  transition: color 150ms ease;
+}
+
+.loju-header-summary:hover .loju-info-indicator {
+  color: #ff92df;
+}
+
+.loju-header-details[open] .loju-info-indicator::after {
+  content: "[-]";
+}
+
+.loju-header-details:not([open]) .loju-info-indicator::after {
+  content: "[+]";
+}
+
+.loju-header-info-drawer {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  font-size: 0.675rem;
+  color: #888888;
+  border-top: 1px dashed #222222;
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.loju-info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.loju-info-key {
+  font-weight: 700;
+  color: #555555;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.loju-info-val {
+  color: #cccccc;
+  flex-grow: 1;
+  word-break: break-all;
+}
+
+.loju-info-pre {
+  margin: 0.25rem 0 0 0;
+  padding: 0.5rem;
+  background-color: #0c0c0c;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  color: #ff79c6;
+  font-size: 0.625rem;
+  font-family: inherit;
+  width: 100%;
+  overflow-x: auto;
+  line-height: 1.4;
 }
 
 .loju-page-main {
