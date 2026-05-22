@@ -7,7 +7,26 @@ export default define.page(function App({ Component, state }) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{state.title ?? "Loju"}</title>
+        <title>{state.title ? `${state.title} | Loju` : "Loju"}</title>
+        {state.description && <meta name="description" content={state.description} />}
+        {state.tags && state.tags.length > 0 && (
+          <meta name="keywords" content={state.tags.join(", ")} />
+        )}
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={state.title ? `${state.title} | Loju` : "Loju"} />
+        {state.description && (
+          <meta property="og:description" content={state.description} />
+        )}
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={state.title ? `${state.title} | Loju` : "Loju"} />
+        {state.description && (
+          <meta name="twitter:description" content={state.description} />
+        )}
+
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <style dangerouslySetInnerHTML={{ __html: CSS }} />
         <link rel="stylesheet" href="/styles.css" />

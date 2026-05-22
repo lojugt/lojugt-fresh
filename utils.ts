@@ -1,7 +1,9 @@
 import { createDefine } from "fresh";
 
 export interface State {
-  title: string;
+  title?: string;
+  description?: string;
+  tags?: string[];
 }
 
 export const define = createDefine<State>();
@@ -34,6 +36,43 @@ export function formatDate(timestamp: number | string): string {
 
 export function stripFrontmatter(content: string): string {
   return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+}
+
+export function getSnippet(content: string, maxLength = 160): string {
+  // Strip frontmatter first
+  let text = stripFrontmatter(content);
+  
+  // Replace headings: "# heading" -> ""
+  text = text.replace(/^#+\s+/gm, "");
+  
+  // Replace Obsidian wikilinks: "[[note|alias]]" -> "alias" or "note"
+  text = text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, target, alias) => {
+    return alias ? alias.trim() : target.trim();
+  });
+  
+  // Replace standard markdown links: "[text](url)" -> "text"
+  text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+  
+  // Replace highlights: "==text==" -> "text"
+  text = text.replace(/==([^=]+)==/g, "$1");
+  
+  // Replace inline code, bold, italics, etc.
+  text = text.replace(/[`*_~]/g, "");
+  
+  // Replace multiple whitespace/newlines with a single space
+  text = text.replace(/\s+/g, " ").trim();
+  
+  if (text.length <= maxLength) {
+    return text;
+  }
+  
+  // Truncate cleanly at a space if possible
+  const truncated = text.slice(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(" ");
+  if (lastSpace > maxLength - 20) {
+    return truncated.slice(0, lastSpace) + "...";
+  }
+  return truncated + "...";
 }
 
 export function resolveWikilink(target: string, allNotes: Note[]): string {

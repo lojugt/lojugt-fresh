@@ -1,6 +1,7 @@
 import {
   define,
   formatDate,
+  getSnippet,
   Note,
   openKv,
   processExternalLinks,
@@ -40,6 +41,17 @@ export const handler = define.handlers({
         if (found) {
           note = found;
         }
+      }
+
+      if (note) {
+        _ctx.state.title = note.title;
+        _ctx.state.description = note.frontmatter?.description || getSnippet(note.content);
+        if (note.tags && note.tags.length > 0) {
+          _ctx.state.tags = note.tags;
+        }
+      } else {
+        _ctx.state.title = "Loju - Home";
+        _ctx.state.description = "A minimalist public notebook powered by Obsidian and Deno KV.";
       }
 
       return {

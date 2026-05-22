@@ -1,6 +1,7 @@
 import {
   define,
   formatDate,
+  getSnippet,
   Note,
   openKv,
   processExternalLinks,
@@ -60,6 +61,14 @@ export const handler = define.handlers({
           status: 307,
           headers: { Location: "/" },
         });
+      }
+
+      if (note) {
+        ctx.state.title = note.title;
+        ctx.state.description = note.frontmatter?.description || getSnippet(note.content);
+        if (note.tags && note.tags.length > 0) {
+          ctx.state.tags = note.tags;
+        }
       }
 
       return {
