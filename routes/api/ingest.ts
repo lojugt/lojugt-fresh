@@ -1,4 +1,4 @@
-import { define } from "../../utils.ts";
+import { define, openKv } from "../../utils.ts";
 
 const AUTH_TOKEN = Deno.env.get("AUTH_TOKEN");
 
@@ -40,7 +40,7 @@ export const handler = define.handlers({
       }
 
       const cleanPath = path && path.endsWith(".md") ? path.slice(0, -3) : path;
-      const kv = await Deno.openKv();
+      const kv = await openKv();
 
       if (action === "publish") {
         const { content, frontmatter, tags, mtime, ctime } = body;

@@ -1,7 +1,7 @@
-import { define } from "../../utils.ts";
+import { define, openKv } from "../utils.ts";
 import { CSS, render } from "@deno/gfm";
-import type { Note } from "./index.tsx";
-import Sidebar from "../../islands/Sidebar.tsx";
+import type { Note } from "./notes/index.tsx";
+import Sidebar from "../islands/Sidebar.tsx";
 
 // Syntax highlighting components for Deno GFM
 import "npm:prismjs@1.29.0/components/prism-typescript.js";
@@ -28,7 +28,7 @@ export const handler = define.handlers({
       ? noTrailingSlash.slice(0, -3)
       : noTrailingSlash;
     try {
-      const kv = await Deno.openKv();
+      const kv = await openKv();
       const result = await kv.get(["notes", cleanPath]);
 
       const entries = kv.list({ prefix: ["notes"] });
@@ -81,7 +81,39 @@ function stripFrontmatter(content: string): string {
   return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
 }
 
-function processMarkdownFeatures(markdown: string): string {
+function resolveWikilink(target: string, allNotes: Note[]): string {
+  // Normalize target: replace backslashes with forward slashes, trim
+  const normalizedTarget = target.replace(/\\/g, "/").trim();
+
+  // 1. Exact match (case-sensitive)
+  let match = allNotes.find((n) => n.path === normalizedTarget);
+  if (match) return match.path;
+
+  // 2. Exact match (case-insensitive)
+  const lowerTarget = normalizedTarget.toLowerCase();
+  match = allNotes.find((n) => n.path.toLowerCase() === lowerTarget);
+  if (match) return match.path;
+
+  // 3. Ending match / filename match (e.g. "Anonymous Unreal" matches "subfolder two/Anonymous Unreal")
+  // Case-sensitive check
+  match = allNotes.find((n) =>
+    n.path.endsWith("/" + normalizedTarget) ||
+    n.path.split("/").pop() === normalizedTarget
+  );
+  if (match) return match.path;
+
+  // Case-insensitive check
+  match = allNotes.find((n) =>
+    n.path.toLowerCase().endsWith("/" + lowerTarget) ||
+    n.path.split("/").pop()?.toLowerCase() === lowerTarget
+  );
+  if (match) return match.path;
+
+  // Fallback: return normalizedTarget
+  return normalizedTarget;
+}
+
+function processMarkdownFeatures(markdown: string, allNotes: Note[]): string {
   const parts = markdown.split(/(```[\s\S]*?```)/g);
   return parts.map((part, index) => {
     if (index % 2 !== 0) {
@@ -95,7 +127,7 @@ function processMarkdownFeatures(markdown: string): string {
 
       let text = subPart;
 
-      // 1. Convert Obsidian wikilinks
+      // 1. Convert Obsidian wikilinks using resolution
       text = text.replace(
         /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
         (_match, targetRaw, aliasRaw) => {
@@ -106,10 +138,11 @@ function processMarkdownFeatures(markdown: string): string {
             return `[${alias}](/notes)`;
           }
 
-          const encodedTarget = target.split("/").map((part: string) =>
+          const resolvedPath = resolveWikilink(target, allNotes);
+          const encodedTarget = resolvedPath.split("/").map((part: string) =>
             encodeURIComponent(part)
           ).join("/");
-          return `[${alias}](/notes/${encodedTarget})`;
+          return `[${alias}](/${encodedTarget})`;
         },
       );
 
@@ -143,6 +176,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   if (note) {
     const cleanMarkdown = processMarkdownFeatures(
       stripFrontmatter(note.content),
+      notes || [],
     );
     const rawHtml = render(cleanMarkdown);
     htmlContent = processExternalLinks(rawHtml);

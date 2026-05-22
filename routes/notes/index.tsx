@@ -1,4 +1,4 @@
-import { define } from "../../utils.ts";
+import { define, openKv } from "../../utils.ts";
 import Sidebar from "../../islands/Sidebar.tsx";
 
 export interface Note {
@@ -15,7 +15,7 @@ export interface Note {
 export const handler = define.handlers({
   async GET(_ctx) {
     try {
-      const kv = await Deno.openKv();
+      const kv = await openKv();
       const entries = kv.list({ prefix: ["notes"] });
       const notes: Note[] = [];
 
@@ -116,7 +116,7 @@ export default define.page<typeof handler>(function NotesIndex({ data }) {
                     <div class="mb-3">
                       <h2 class="text-base font-bold">
                         <a
-                          href={`/notes/${note.path}`}
+                          href={`/${note.path}`}
                           class="text-white hover:text-[#58a6ff] hover:underline transition-colors"
                         >
                           {note.title}

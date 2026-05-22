@@ -11,3 +11,7 @@ _fresh/
 node_modules/
 vendor/
 
+# Local Deno KV sqlite database
+kv.db
+kv.db-shm
+kv.db-wal

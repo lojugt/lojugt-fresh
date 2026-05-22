@@ -131,7 +131,7 @@ export default function Sidebar(
       return (
         <li key={node.path} class="pl-5">
           <a
-            href={`/notes/${node.path}`}
+            href={`/${node.path}`}
             class={`block py-1 text-xs transition-colors font-mono truncate ${
               isActive
                 ? "text-[#58a6ff] font-bold"
