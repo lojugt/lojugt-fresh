@@ -218,15 +218,19 @@ body {
   backdrop-filter: blur(12px);
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
   z-index: 50;
   transition: background-color 300ms ease, border-color 300ms ease;
+  border-left: 1px solid var(--header-border);
+  border-right: 1px solid var(--header-border);
 }
 
 .loju-page-header-inner {
   width: 100%;
-  padding: 1.6rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -234,7 +238,7 @@ body {
 
 .loju-brand {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--text-primary);
@@ -242,7 +246,7 @@ body {
 }
 
 .loju-page-path {
-  font-size: 0.625rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
 }
 
@@ -250,9 +254,9 @@ body {
   background: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
-  padding: 0.125rem 0.4rem;
+  padding: 0.2rem 0.5rem;
   font-family: inherit;
-  font-size: 0.625rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
@@ -306,19 +310,19 @@ body {
 }
 
 .loju-clickable-path:hover {
-  color: #ffffff;
+  color: var(--link-hover);
   text-decoration: underline;
 }
 
 .loju-info-indicator {
-  font-size: 0.625rem;
-  color: #ff79c6;
+  font-size: 0.9rem;
+  color: var(--link-color);
   font-weight: 700;
   transition: color 150ms ease;
 }
 
 .loju-header-summary:hover .loju-info-indicator {
-  color: #ff92df;
+  color: var(--link-hover);
 }
 
 .loju-header-details[open] .loju-info-indicator::after {
@@ -332,7 +336,7 @@ body {
 .loju-header-info-drawer {
   width: 100%;
   padding: 1.5rem 1.5rem 1.25rem 1.5rem;
-  font-size: 0.675rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   border-bottom: 1px dashed var(--border-dashed);
   display: flex;
@@ -364,12 +368,13 @@ body {
   background: transparent;
   border: 1px solid var(--tag-border);
   color: var(--tag-text);
-  padding: 0.125rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   font-family: inherit;
-  font-size: 0.625rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 150ms ease;
+  border-radius: 4px;
 }
 
 .loju-share-btn:hover {
@@ -380,11 +385,11 @@ body {
 .loju-info-pre {
   margin: 0.25rem 0 0 0;
   padding: 0.5rem;
-  background-color: #0c0c0c;
-  border: 1px solid #1a1a1a;
+  background-color: var(--pre-bg);
+  border: 1px solid var(--pre-border);
   border-radius: 4px;
-  color: #ff79c6;
-  font-size: 0.625rem;
+  color: var(--pre-text);
+  font-size: 0.8rem;
   font-family: inherit;
   width: 100%;
   overflow-x: auto;
@@ -445,7 +450,8 @@ body {
 
 .loju-markdown {
   background-color: transparent;
-  color: #ffffff;
+  color: var(--text-primary);
+  --color-fg-default: var(--text-primary) !important;
   font-size: 1rem;
   line-height: 1.8;
   max-width: 500px;
@@ -605,14 +611,14 @@ mark.highlight,
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.75rem;
-  color: #888888;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color 150ms ease;
 }
 
 .loju-back-link:hover {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .loju-back-icon {
