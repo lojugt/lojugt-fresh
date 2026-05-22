@@ -1,3 +1,4 @@
+import { CSS } from "@deno/gfm";
 import { define } from "../utils.ts";
 
 export default define.page(function App({ Component, state }) {
@@ -17,21 +18,8 @@ export default define.page(function App({ Component, state }) {
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
+        <style dangerouslySetInnerHTML={{ __html: CSS }} />
         <link rel="stylesheet" href="/styles.css" />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-          body {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            background-color: #000000;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-          }
-        `,
-          }}
-        />
       </head>
       <body>
         <Component />

@@ -7,7 +7,7 @@ import {
   processMarkdownFeatures,
   stripFrontmatter,
 } from "../utils.ts";
-import { CSS, render } from "@deno/gfm";
+import { render } from "@deno/gfm";
 
 // Syntax highlighting components for Deno GFM
 import "npm:prismjs@1.29.0/components/prism-typescript.js";
@@ -92,111 +92,13 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   }
 
   return (
-    <div class="min-h-screen bg-black text-[#f3f4f6] pb-24 font-mono">
-      {/* Scope Deno GFM Styles */}
-      <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        body {
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-          background-color: #000000 !important;
-          color: #ffffff !important;
-        }
-        .markdown-body {
-          background-color: transparent !important;
-          color: #ffffff !important;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-          font-size: 14px;
-          line-height: 1.8;
-          max-width: 500px;
-          margin: 0 auto;
-        }
-        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
-          color: #ffffff !important;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-          margin-top: 2em;
-          margin-bottom: 0.8em;
-          font-weight: 700;
-          text-align: center !important;
-          border-bottom: none !important;
-        }
-        .markdown-body h1 { font-size: 1.8em; }
-        .markdown-body h2 { font-size: 1.4em; }
-        .markdown-body h3 { font-size: 1.2em; }
-        
-        .markdown-body p, .markdown-body ul, .markdown-body ol, .markdown-body blockquote, .markdown-body pre, .markdown-body table {
-          text-align: left !important;
-        }
-        .markdown-body a {
-          color: #58a6ff !important;
-          text-decoration: underline;
-        }
-        .markdown-body a:hover {
-          color: #79c0ff !important;
-        }
-        .markdown-body pre {
-          background-color: #0d1117 !important;
-          border: 1px solid #30363d !important;
-          border-radius: 6px !important;
-          padding: 16px !important;
-        }
-        .markdown-body code {
-          background-color: rgba(110, 118, 129, 0.2) !important;
-          border-radius: 4px !important;
-          color: #ff7b72 !important;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-          font-size: 0.9em;
-          padding: 0.2em 0.4em !important;
-        }
-        .markdown-body pre code {
-          color: #c9d1d9 !important;
-          background-color: transparent !important;
-          padding: 0 !important;
-        }
-        .markdown-body blockquote {
-          border-left: 0.25em solid #30363d !important;
-          color: #8b949e !important;
-          background-color: transparent !important;
-          padding: 0 1em !important;
-        }
-        .markdown-body table tr {
-          background-color: #0d1117 !important;
-          border-top: 1px solid #30363d !important;
-        }
-        .markdown-body table tr:nth-child(2n) {
-          background-color: #161b22 !important;
-        }
-        .markdown-body table th, .markdown-body table td {
-          border: 1px solid #30363d !important;
-          padding: 6px 13px !important;
-        }
-        .markdown-body img {
-          border-radius: 6px;
-          border: 1px solid #30363d;
-          margin: 2rem auto;
-          display: block;
-        }
-        mark.highlight, .highlight {
-          background-color: #e0af68 !important;
-          color: #1a1b26 !important;
-          padding: 0.1em 0.3em !important;
-          border-radius: 2px !important;
-          font-weight: 500;
-        }
-      `,
-        }}
-      />
-
-      <header class="border-b border-[#222] bg-black/90 backdrop-blur-sm sticky top-0 z-50">
-        <div class="max-w-[500px] mx-auto px-6 py-5 flex items-center justify-between">
-          <a
-            href="/"
-            class="flex items-center gap-2 text-xs text-[#888] hover:text-[#fff] transition-colors duration-200 group"
-          >
+    <div class="loju-page">
+      <header class="loju-page-header">
+        <div class="loju-page-header-inner">
+          <a href="/" class="loju-back-link">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transform group-hover:-translate-x-1 transition-transform"
+              class="loju-back-icon"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -210,24 +112,22 @@ export default define.page<typeof handler>(function NoteView({ data }) {
             </svg>
             [HOME]
           </a>
-          <div class="text-[10px] text-[#555]">
-            {note ? note.path : "ERROR"}
-          </div>
+          <div class="loju-page-path">{note ? note.path : "ERROR"}</div>
         </div>
       </header>
 
-      <main class="max-w-[500px] mx-auto px-6 mt-12">
+      <main class="loju-page-main">
         {note
           ? (
             <article>
               {/* Note Metadata Header */}
-              <div class="mb-10 pb-8 border-b border-[#222]">
+              <div class="loju-note-meta-header">
                 {note.tags && note.tags.length > 0 && (
-                  <div class="flex flex-wrap justify-center gap-2 mb-4">
+                  <div class="loju-note-tags">
                     {note.tags.map((tag) => (
                       <span
                         key={tag}
-                        class="text-[9px] px-2 py-0.5 border border-[#444] bg-[#111] text-[#aaa] uppercase tracking-wider font-bold"
+                        class="loju-note-tag"
                       >
                         {tag}
                       </span>
@@ -235,16 +135,16 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   </div>
                 )}
 
-                <h1 class="text-3xl font-bold text-white text-center mb-4 tracking-tight">
+                <h1 class="loju-note-title">
                   {note.title}
                 </h1>
 
-                <div class="flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-[10px] text-[#555]">
-                  <div class="flex items-center gap-1.5">
+                <div class="loju-note-meta">
+                  <div>
                     <span>LAST_MODIFIED: {formatDate(note.mtime)}</span>
                   </div>
                   {note.ctime && (
-                    <div class="flex items-center gap-1.5">
+                    <div>
                       <span>CREATED: {formatDate(note.ctime)}</span>
                     </div>
                   )}
@@ -253,14 +153,14 @@ export default define.page<typeof handler>(function NoteView({ data }) {
 
               {/* Rendered Markdown Body */}
               <div
-                class="markdown-body"
+                class="markdown-body loju-markdown"
                 data-color-mode="dark"
                 data-dark-theme="dark"
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
             </article>
           )
-          : <p class="text-xs text-[#555]">[NO_NOTE_DATA_AVAILABLE]</p>}
+          : <p class="loju-no-data">[NO_NOTE_DATA_AVAILABLE]</p>}
       </main>
     </div>
   );

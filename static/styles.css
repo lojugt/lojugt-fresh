@@ -142,3 +142,286 @@ html {
     rgb(254, 249, 195)
   );
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background-color: #000000;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+.loju-page {
+  min-height: 100vh;
+  background-color: #000000;
+  color: #f3f4f6;
+  padding-bottom: 6rem;
+}
+
+.loju-page-header {
+  border-bottom: 1px solid #222222;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.loju-page-header-inner {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.loju-brand {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+  user-select: none;
+}
+
+.loju-page-path {
+  font-size: 0.625rem;
+  color: #777777;
+}
+
+.loju-page-main {
+  max-width: 500px;
+  margin: 3rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.loju-note-meta-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #222222;
+}
+
+.loju-note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.loju-note-tag {
+  font-size: 0.65rem;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid #444444;
+  background-color: #111111;
+  color: #aaaaaa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.loju-note-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.loju-note-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 1.5rem;
+  font-size: 0.625rem;
+  color: #777777;
+}
+
+.loju-markdown {
+  background-color: transparent;
+  color: #ffffff;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.loju-markdown h1,
+.loju-markdown h2,
+.loju-markdown h3,
+.loju-markdown h4,
+.loju-markdown h5,
+.loju-markdown h6 {
+  color: #ffffff;
+  font-family: inherit;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: none;
+}
+
+.loju-markdown h1 { font-size: 1.8rem; }
+.loju-markdown h2 { font-size: 1.4rem; }
+.loju-markdown h3 { font-size: 1.2rem; }
+
+.loju-markdown p,
+.loju-markdown ul,
+.loju-markdown ol,
+.loju-markdown blockquote,
+.loju-markdown pre,
+.loju-markdown table {
+  text-align: left;
+}
+
+.loju-markdown a {
+  color: #58a6ff;
+  text-decoration: underline;
+}
+
+.loju-markdown a:hover {
+  color: #79c0ff;
+}
+
+.loju-markdown pre {
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.loju-markdown code {
+  background-color: rgba(110, 118, 129, 0.2);
+  border-radius: 0.25rem;
+  color: #ff7b72;
+  font-family: inherit;
+  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+}
+
+.loju-markdown pre code {
+  color: #c9d1d9;
+  background-color: transparent;
+  padding: 0;
+}
+
+.loju-markdown blockquote {
+  border-left: 0.25rem solid #30363d;
+  color: #8b949e;
+  background-color: transparent;
+  padding: 0 1rem;
+}
+
+.loju-markdown table tr {
+  background-color: #0d1117;
+  border-top: 1px solid #30363d;
+}
+
+.loju-markdown table tr:nth-child(2n) {
+  background-color: #161b22;
+}
+
+.loju-markdown table th,
+.loju-markdown table td {
+  border: 1px solid #30363d;
+  padding: 0.375rem 0.8rem;
+}
+
+.loju-markdown img {
+  border-radius: 0.375rem;
+  border: 1px solid #30363d;
+  margin: 2rem auto;
+  display: block;
+}
+
+mark.highlight,
+.highlight,
+.mark-highlight {
+  background-color: #e0af68;
+  color: #1a1b26;
+  padding: 0.1em 0.3em;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.loju-markdown sup[data-footnote-ref] {
+  font-size: 0.75em;
+}
+
+.loju-markdown .footnotes {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #30363d;
+}
+
+.loju-markdown .footnotes ol {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.loju-markdown .footnotes li {
+  margin-bottom: 0.75rem;
+}
+
+.loju-markdown .footnotes a[data-footnote-backref] {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.loju-markdown .footnotes a[data-footnote-backref]:hover {
+  text-decoration: underline;
+}
+
+.loju-empty-state {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.loju-empty-main {
+  text-align: center;
+}
+
+.loju-empty-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  padding-left: 0.25em;
+}
+
+.loju-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #888888;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.loju-back-link:hover {
+  color: #ffffff;
+}
+
+.loju-back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  display: inline-block;
+  transition: transform 150ms ease;
+}
+
+.loju-back-link:hover .loju-back-icon {
+  transform: translateX(-0.25rem);
+}
+
+.loju-no-data {
+  color: #777777;
+  font-size: 0.75rem;
+}
