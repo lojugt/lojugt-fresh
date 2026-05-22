@@ -59,6 +59,8 @@ function formatDate(timestamp: number): string {
 
 export default define.page<typeof handler>(function NotesIndex({ data }) {
   const { notes, error } = data;
+  const recentNotes = notes.slice(0, 3);
+  const directoryNotes = [...notes].sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <div class="min-h-screen bg-black text-[#ffffff] pb-24 font-mono px-6">
@@ -103,44 +105,70 @@ export default define.page<typeof handler>(function NotesIndex({ data }) {
             </div>
           )
           : (
-            <div class="space-y-12">
-              {notes.map((note) => (
-                <article
-                  key={note.path}
-                  class="border-b border-[#222] pb-10 last:border-b-0"
-                >
-                  <div class="mb-3">
-                    <h2 class="text-base font-bold">
+            <div>
+              {/* Recent Updates */}
+              <div class="space-y-12">
+                {recentNotes.map((note) => (
+                  <article
+                    key={note.path}
+                    class="border-b border-[#222] pb-10 last:border-b-0"
+                  >
+                    <div class="mb-3">
+                      <h2 class="text-base font-bold">
+                        <a
+                          href={`/notes/${note.path}`}
+                          class="text-white hover:text-[#58a6ff] hover:underline transition-colors"
+                        >
+                          {note.title}
+                        </a>
+                      </h2>
+                      <div class="text-[10px] text-[#555] mt-1.5">
+                        {formatDate(note.mtime)}
+                      </div>
+                    </div>
+
+                    <p class="text-xs text-[#888] leading-relaxed mb-4">
+                      {getSnippet(note.content)}
+                    </p>
+
+                    {note.tags && note.tags.length > 0 && (
+                      <div class="flex flex-wrap gap-2.5">
+                        {note.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            class="text-[9px] text-[#58a6ff]"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+
+              {/* Full Directory */}
+              <section class="mt-20 pt-12 border-t border-[#222]">
+                <h2 class="text-[10px] uppercase tracking-[0.3em] text-[#555] mb-8 font-bold text-center">
+                  All Notes
+                </h2>
+                <ul class="space-y-4">
+                  {directoryNotes.map((note) => (
+                    <li key={note.path} class="flex items-baseline gap-2 text-xs">
                       <a
                         href={`/notes/${note.path}`}
-                        class="text-white hover:text-[#58a6ff] hover:underline transition-colors"
+                        class="text-[#888] hover:text-[#58a6ff] hover:underline transition-colors whitespace-nowrap"
                       >
                         {note.title}
                       </a>
-                    </h2>
-                    <div class="text-[10px] text-[#555] mt-1.5">
-                      {formatDate(note.mtime)}
-                    </div>
-                  </div>
-
-                  <p class="text-xs text-[#888] leading-relaxed mb-4">
-                    {getSnippet(note.content)}
-                  </p>
-
-                  {note.tags && note.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-2.5">
-                      {note.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          class="text-[9px] text-[#58a6ff]"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </article>
-              ))}
+                      <span class="flex-grow border-b border-dotted border-[#222]"></span>
+                      <span class="text-[10px] text-[#444] whitespace-nowrap font-mono">
+                        {formatDate(note.mtime)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             </div>
           )}
       </main>
