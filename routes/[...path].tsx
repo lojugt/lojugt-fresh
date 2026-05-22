@@ -39,9 +39,22 @@ export const handler = define.handlers({
 
     try {
       const kv = await openKv();
-      const result = await kv.get(["notes", cleanPath]);
+      const entries = kv.list({ prefix: ["notes"] });
+      const notes: Note[] = [];
+      for await (const entry of entries) {
+        notes.push(entry.value as Note);
+      }
 
-      if (!result.value) {
+      // Find note case-sensitively first
+      let note = notes.find((n) => n.path === cleanPath);
+
+      // Fallback to case-insensitive match
+      if (!note) {
+        const lowerCleanPath = cleanPath.toLowerCase();
+        note = notes.find((n) => n.path.toLowerCase() === lowerCleanPath);
+      }
+
+      if (!note) {
         // Redirect to homepage on failure to find the entry
         return new Response(null, {
           status: 307,
@@ -49,15 +62,9 @@ export const handler = define.handlers({
         });
       }
 
-      const entries = kv.list({ prefix: ["notes"] });
-      const notes: Note[] = [];
-      for await (const entry of entries) {
-        notes.push(entry.value as Note);
-      }
-
       return {
         data: {
-          note: result.value as Note,
+          note,
           notes,
         },
       };
