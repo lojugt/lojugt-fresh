@@ -106,22 +106,8 @@ export default define.page<typeof handler>(function NoteView({ data }) {
         <details class="loju-header-details">
           <summary class="loju-header-summary">
             <div class="loju-page-header-inner">
-              <a href="/" class="loju-back-link" onClick={(e) => e.stopPropagation()}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="loju-back-icon"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
-                [HOME]
+              <a href="https://loju.ca" class="loju-brand" onclick="event.stopPropagation();">
+                LOJU
               </a>
               <div class="loju-page-path-container">
                 <button
@@ -129,8 +115,8 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   title="Toggle day/night mode"
                   onclick="event.stopPropagation(); window.toggleLojuTheme();"
                 >
-                  <span class="loju-toggle-icon">🍇</span>
-                  <span id="loju-theme-status">DAY</span>
+                  <span class="loju-toggle-icon">🍍</span>
+                  <span id="loju-theme-status">LUX</span>
                 </button>
                 <span class="loju-page-path">
                   {note ? note.path : "ERROR"}

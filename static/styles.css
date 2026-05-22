@@ -242,12 +242,25 @@ body {
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--text-primary);
+  text-decoration: none;
+  display: inline-block;
   user-select: none;
+}
+
+.loju-brand:hover {
+  color: var(--text-primary);
+  text-decoration: none;
 }
 
 .loju-page-path {
   font-size: 0.9rem;
   color: var(--text-secondary);
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
 }
 
 .loju-theme-toggle-btn {
@@ -302,6 +315,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
+  max-width: 70%;
 }
 
 .loju-clickable-path {
@@ -342,26 +357,31 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .loju-info-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
   line-height: 1.4;
+  width: 100%;
 }
 
 .loju-info-key {
   font-weight: 700;
   color: var(--drawer-key);
-  width: 100px;
+  width: 90px;
   flex-shrink: 0;
 }
 
 .loju-info-val {
   color: var(--drawer-val);
   flex-grow: 1;
-  word-break: break-all;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .loju-share-btn {

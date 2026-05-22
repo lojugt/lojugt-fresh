@@ -45,11 +45,12 @@ export default define.page(function App({ Component, state }) {
             
             const statusEl = document.getElementById('loju-theme-status');
             if (statusEl) {
-              statusEl.innerText = theme === 'dark' ? 'NIGHT' : 'DAY';
+              statusEl.innerText = theme === 'dark' ? 'NYX' : 'LUX';
             }
             
             const iconEl = document.querySelector('.loju-toggle-icon');
             if (iconEl) {
+              iconEl.innerText = theme === 'dark' ? '🍇' : '🍍';
               iconEl.style.transform = 'scale(1.2) rotate(360deg)';
               setTimeout(() => {
                 iconEl.style.transform = '';

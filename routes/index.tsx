@@ -93,15 +93,17 @@ export default define.page<typeof handler>(function Home({ data }) {
           <details class="loju-header-details">
             <summary class="loju-header-summary">
               <div class="loju-page-header-inner">
-                <span class="loju-brand">LOJU</span>
+                <a href="https://loju.ca" class="loju-brand" onclick="event.stopPropagation();">
+                  LOJU
+                </a>
                 <div class="loju-page-path-container">
                   <button
                     class="loju-theme-toggle-btn"
                     title="Toggle day/night mode"
                     onclick="event.stopPropagation(); window.toggleLojuTheme();"
                   >
-                    <span class="loju-toggle-icon">🍇</span>
-                    <span id="loju-theme-status">DAY</span>
+                    <span class="loju-toggle-icon">🍍</span>
+                    <span id="loju-theme-status">LUX</span>
                   </button>
                   <span class="loju-page-path">
                     {note.path}
