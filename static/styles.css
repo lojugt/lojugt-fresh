@@ -159,8 +159,8 @@ body {
 }
 
 .loju-page-header {
-  border-top: 1px solid #222222;
-  background-color: rgba(0, 0, 0, 0.95);
+  border-top: 1px solid #333338;
+  background-color: #0e0e10;
   backdrop-filter: blur(12px);
   position: fixed;
   bottom: 0;
@@ -178,7 +178,7 @@ body {
 }
 
 .loju-brand {
-  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -253,7 +253,7 @@ body {
   padding: 1.5rem 1.5rem 1.25rem 1.5rem;
   font-size: 0.675rem;
   color: #888888;
-  border-bottom: 1px dashed #222222;
+  border-bottom: 1px dashed #333338;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -343,9 +343,9 @@ body {
 }
 
 .loju-note-title {
-  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
   color: #ffffff;
   text-align: left;
   margin-bottom: 1rem;
@@ -378,10 +378,10 @@ body {
 .loju-markdown h5,
 .loju-markdown h6 {
   color: #ffffff;
-  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   text-align: left;
   border-bottom: none;
 }
@@ -513,9 +513,9 @@ mark.highlight,
 }
 
 .loju-empty-title {
-  font-family: 'Dela Gothic One', 'Do Hyeon', 'Noto Serif JP', sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
   padding-left: 0.1em;
 }

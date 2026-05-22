@@ -115,12 +115,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 [HOME]
               </a>
               <div class="loju-page-path-container">
-                <span
-                  class="loju-page-path loju-clickable-path"
-                  data-path={note ? note.path : ""}
-                  onclick="event.stopPropagation(); const path = this.getAttribute('data-path'); const shareUrl = window.location.origin + '/' + (path === 'index' ? '' : encodeURIComponent(path)); navigator.clipboard.writeText(shareUrl); const originalText = this.innerText; this.innerText = '[LINK COPIED!]'; this.style.color = '#ff79c6'; setTimeout(() => { this.innerText = originalText; this.style.color = ''; }, 2000);"
-                  title="Click to copy shareable link"
-                >
+                <span class="loju-page-path">
                   {note ? note.path : "ERROR"}
                 </span>
                 <span class="loju-info-indicator"></span>
