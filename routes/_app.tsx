@@ -11,9 +11,57 @@ export default define.page(function App({ Component, state }) {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <style dangerouslySetInnerHTML={{ __html: CSS }} />
         <link rel="stylesheet" href="/styles.css" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            const savedTheme = localStorage.getItem('loju-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+          })();
+        ` }} />
       </head>
       <body>
         <Component />
+        <script dangerouslySetInnerHTML={{ __html: `
+          function updateLojuThemeUI() {
+            const theme = document.documentElement.getAttribute('data-theme') || 'light';
+            
+            const statusEl = document.getElementById('loju-theme-status');
+            if (statusEl) {
+              statusEl.innerText = theme === 'dark' ? 'NIGHT' : 'DAY';
+            }
+            
+            const iconEl = document.querySelector('.loju-toggle-icon');
+            if (iconEl) {
+              iconEl.style.transform = 'scale(1.2) rotate(360deg)';
+              setTimeout(() => {
+                iconEl.style.transform = '';
+              }, 300);
+            }
+
+            const markdownBody = document.querySelector('.markdown-body');
+            if (markdownBody) {
+              if (theme === 'dark') {
+                markdownBody.setAttribute('data-color-mode', 'dark');
+                markdownBody.setAttribute('data-dark-theme', 'dark');
+              } else {
+                markdownBody.setAttribute('data-color-mode', 'light');
+                markdownBody.setAttribute('data-light-theme', 'light');
+              }
+            }
+          }
+
+          window.toggleLojuTheme = function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('loju-theme', newTheme);
+            updateLojuThemeUI();
+          };
+
+          document.addEventListener('DOMContentLoaded', updateLojuThemeUI);
+          if (document.readyState !== 'loading') {
+            updateLojuThemeUI();
+          }
+        ` }} />
       </body>
     </html>
   );

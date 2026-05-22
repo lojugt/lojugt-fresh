@@ -115,6 +115,14 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 [HOME]
               </a>
               <div class="loju-page-path-container">
+                <button
+                  class="loju-theme-toggle-btn"
+                  title="Toggle day/night mode"
+                  onclick="event.stopPropagation(); window.toggleLojuTheme();"
+                >
+                  <span class="loju-toggle-icon">🍇</span>
+                  <span id="loju-theme-status">DAY</span>
+                </button>
                 <span class="loju-page-path">
                   {note ? note.path : "ERROR"}
                 </span>
