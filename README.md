@@ -1,3 +1,3 @@
 # Loju
 
-Evolving project.
+Evolving project. Obsidian Vault -> Website converter. 
