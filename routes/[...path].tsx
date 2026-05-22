@@ -1,7 +1,13 @@
-import { define, openKv } from "../utils.ts";
+import {
+  define,
+  formatDate,
+  Note,
+  openKv,
+  processExternalLinks,
+  processMarkdownFeatures,
+  stripFrontmatter,
+} from "../utils.ts";
 import { CSS, render } from "@deno/gfm";
-import type { Note } from "./notes/index.tsx";
-import Sidebar from "../islands/Sidebar.tsx";
 
 // Syntax highlighting components for Deno GFM
 import "npm:prismjs@1.29.0/components/prism-typescript.js";
@@ -17,7 +23,10 @@ export const handler = define.handlers({
   async GET(ctx) {
     const { path } = ctx.params;
     if (!path) {
-      return new Response("Path parameter missing", { status: 400 });
+      return new Response(null, {
+        status: 307,
+        headers: { Location: "/" },
+      });
     }
 
     const decodedPath = decodeURIComponent(path);
@@ -27,9 +36,18 @@ export const handler = define.handlers({
     const cleanPath = noTrailingSlash.endsWith(".md")
       ? noTrailingSlash.slice(0, -3)
       : noTrailingSlash;
+
     try {
       const kv = await openKv();
       const result = await kv.get(["notes", cleanPath]);
+
+      if (!result.value) {
+        // Redirect to homepage on failure to find the entry
+        return new Response(null, {
+          status: 307,
+          headers: { Location: "/" },
+        });
+      }
 
       const entries = kv.list({ prefix: ["notes"] });
       const notes: Note[] = [];
@@ -37,140 +55,24 @@ export const handler = define.handlers({
         notes.push(entry.value as Note);
       }
 
-      if (!result.value) {
-        return {
-          data: {
-            note: null,
-            notes,
-            error: `Note "${cleanPath}" not found in Deno KV database.`,
-          },
-        };
-      }
-
       return {
         data: {
           note: result.value as Note,
           notes,
-          error: null,
         },
       };
     } catch (e) {
-      const err = e as any;
-      return {
-        data: {
-          note: null,
-          notes: [],
-          error: err.stack || err.message || String(err),
-        },
-      };
+      console.error("Error loading note, redirecting to home:", e);
+      return new Response(null, {
+        status: 307,
+        headers: { Location: "/" },
+      });
     }
   },
 });
 
-function formatDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function stripFrontmatter(content: string): string {
-  return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
-}
-
-function resolveWikilink(target: string, allNotes: Note[]): string {
-  // Normalize target: replace backslashes with forward slashes, trim
-  const normalizedTarget = target.replace(/\\/g, "/").trim();
-
-  // 1. Exact match (case-sensitive)
-  let match = allNotes.find((n) => n.path === normalizedTarget);
-  if (match) return match.path;
-
-  // 2. Exact match (case-insensitive)
-  const lowerTarget = normalizedTarget.toLowerCase();
-  match = allNotes.find((n) => n.path.toLowerCase() === lowerTarget);
-  if (match) return match.path;
-
-  // 3. Ending match / filename match (e.g. "Anonymous Unreal" matches "subfolder two/Anonymous Unreal")
-  // Case-sensitive check
-  match = allNotes.find((n) =>
-    n.path.endsWith("/" + normalizedTarget) ||
-    n.path.split("/").pop() === normalizedTarget
-  );
-  if (match) return match.path;
-
-  // Case-insensitive check
-  match = allNotes.find((n) =>
-    n.path.toLowerCase().endsWith("/" + lowerTarget) ||
-    n.path.split("/").pop()?.toLowerCase() === lowerTarget
-  );
-  if (match) return match.path;
-
-  // Fallback: return normalizedTarget
-  return normalizedTarget;
-}
-
-function processMarkdownFeatures(markdown: string, allNotes: Note[]): string {
-  const parts = markdown.split(/(```[\s\S]*?```)/g);
-  return parts.map((part, index) => {
-    if (index % 2 !== 0) {
-      return part;
-    }
-    const inlineParts = part.split(/(`[^`\n]+`)/g);
-    return inlineParts.map((subPart, subIndex) => {
-      if (subIndex % 2 !== 0) {
-        return subPart;
-      }
-
-      let text = subPart;
-
-      // 1. Convert Obsidian wikilinks using resolution
-      text = text.replace(
-        /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
-        (_match, targetRaw, aliasRaw) => {
-          const target = targetRaw.trim();
-          const alias = aliasRaw ? aliasRaw.trim() : target;
-
-          if (target.toLowerCase() === "index") {
-            return `[${alias}](/notes)`;
-          }
-
-          const resolvedPath = resolveWikilink(target, allNotes);
-          const encodedTarget = resolvedPath.split("/").map((part: string) =>
-            encodeURIComponent(part)
-          ).join("/");
-          return `[${alias}](/${encodedTarget})`;
-        },
-      );
-
-      // 2. Convert Obsidian highlights
-      text = text.replace(/==([^=]+)==/g, '<mark class="highlight">$1</mark>');
-
-      return text;
-    }).join("");
-  }).join("");
-}
-
-function processExternalLinks(html: string): string {
-  return html.replace(
-    /<a\s+([^>]*?)href="(https?:\/\/([^"]+))"([^>]*?)>/g,
-    (match, beforeHref, fullUrl, _urlPath, afterHref) => {
-      if (
-        beforeHref.includes('target="_blank"') ||
-        afterHref.includes('target="_blank"')
-      ) {
-        return match;
-      }
-      return `<a ${beforeHref}href="${fullUrl}"${afterHref} target="_blank" rel="noopener noreferrer">`;
-    },
-  );
-}
-
 export default define.page<typeof handler>(function NoteView({ data }) {
-  const { note, notes, error } = data;
+  const { note, notes } = data;
 
   let htmlContent = "";
   if (note) {
@@ -282,7 +184,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
       <header class="border-b border-[#222] bg-black/90 backdrop-blur-sm sticky top-0 z-50">
         <div class="max-w-[500px] mx-auto px-6 py-5 flex items-center justify-between">
           <a
-            href="/notes"
+            href="/"
             class="flex items-center gap-2 text-xs text-[#888] hover:text-[#fff] transition-colors duration-200 group"
           >
             <svg
@@ -299,7 +201,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            [BACK_TO_NOTES]
+            [HOME]
           </a>
           <div class="text-[10px] text-[#555]">
             {note ? note.path : "ERROR"}
@@ -308,16 +210,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
       </header>
 
       <main class="max-w-[500px] mx-auto px-6 mt-12">
-        {error
-          ? (
-            <div class="border border-red-500/20 bg-red-950/10 text-red-400 p-6 font-mono text-xs">
-              <h2 class="text-sm font-bold text-red-400 mb-2">
-                [ERROR_LOADING_NOTE]
-              </h2>
-              <p>{error}</p>
-            </div>
-          )
-          : note
+        {note
           ? (
             <article>
               {/* Note Metadata Header */}
@@ -362,7 +255,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           )
           : <p class="text-xs text-[#555]">[NO_NOTE_DATA_AVAILABLE]</p>}
       </main>
-      <Sidebar notes={notes || []} currentPath={note?.path} />
     </div>
   );
 });
