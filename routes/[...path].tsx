@@ -8,7 +8,7 @@ import {
   getSnippet,
   Note,
   openKv,
-  processExternalLinks,
+  processLinks,
   processMarkdownFeatures,
   slugifyPath,
   stripFrontmatter,
@@ -62,7 +62,9 @@ export const handler = define.handlers({
       }
 
       // Find note by matching slugified path
-      let note = notes.find((n) => slugifyPath(n.path) === slugifiedCleanPath);
+      const note = notes.find((n) =>
+        slugifyPath(n.path) === slugifiedCleanPath
+      );
 
       if (!note) {
         // Redirect to homepage on failure to find the entry
@@ -74,12 +76,14 @@ export const handler = define.handlers({
 
       if (note) {
         ctx.state.title = note.title;
-        ctx.state.description = note.frontmatter?.description || getSnippet(note.content);
+        ctx.state.description = note.frontmatter?.description ||
+          getSnippet(note.content);
         if (note.tags && note.tags.length > 0) {
           ctx.state.tags = note.tags;
         }
         ctx.state.dateModified = note.mtime;
-        ctx.state.datePublished = note.frontmatter?.first_published || note.ctime || note.mtime;
+        ctx.state.datePublished = note.frontmatter?.first_published ||
+          note.ctime || note.mtime;
       }
 
       return {
@@ -105,26 +109,30 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   const directPaths = new Set(
     note
       ? [
-          ...getForwardLinks(note, notes).map((n) => slugifyPath(n.path)),
-          ...getBacklinks(note, notes).map((n) => slugifyPath(n.path)),
-        ]
-      : []
+        ...getForwardLinks(note, notes).map((n) => slugifyPath(n.path)),
+        ...getBacklinks(note, notes).map((n) => slugifyPath(n.path)),
+      ]
+      : [],
   );
 
   let htmlContent = "";
   const isIndex = note && note.path.toLowerCase() === "index";
   if (note) {
     const contentWithoutFrontmatter = stripFrontmatter(note.content);
-    const contentWithoutLeadingHeader = (!isIndex && contentWithoutFrontmatter.trimStart().startsWith("# "))
-      ? contentWithoutFrontmatter.trimStart().replace(/^#\s+.*(?:\r?\n|$)/, "")
-      : contentWithoutFrontmatter;
+    const contentWithoutLeadingHeader =
+      (!isIndex && contentWithoutFrontmatter.trimStart().startsWith("# "))
+        ? contentWithoutFrontmatter.trimStart().replace(
+          /^#\s+.*(?:\r?\n|$)/,
+          "",
+        )
+        : contentWithoutFrontmatter;
 
     const cleanMarkdown = processMarkdownFeatures(
       contentWithoutLeadingHeader,
       notes || [],
     );
     const rawHtml = render(cleanMarkdown);
-    htmlContent = processExternalLinks(rawHtml);
+    htmlContent = processLinks(rawHtml, notes || []);
   }
 
   return (
@@ -134,7 +142,11 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           <summary class="loju-header-summary">
             <div class="loju-page-header-inner">
               <div class="loju-page-header-left">
-                <a href="https://loju.ca" class="loju-brand" onclick="event.stopPropagation();">
+                <a
+                  href="https://loju.ca"
+                  class="loju-brand"
+                  {...{ onclick: "event.stopPropagation();" }}
+                >
                   LOJU
                 </a>
               </div>
@@ -145,9 +157,13 @@ export default define.page<typeof handler>(function NoteView({ data }) {
               </div>
               <div class="loju-page-header-right">
                 <button
+                  type="button"
                   class="loju-theme-toggle-btn"
                   title="Toggle day/night mode"
-                  onclick="event.stopPropagation(); window.toggleLojuTheme();"
+                  {...{
+                    onclick:
+                      "event.stopPropagation(); window.toggleLojuTheme();",
+                  }}
                 >
                   <span class="loju-toggle-icon">🍍</span>
                   <span id="loju-theme-status">LUX</span>
@@ -159,8 +175,12 @@ export default define.page<typeof handler>(function NoteView({ data }) {
             <div class="loju-header-info-drawer">
               <div class="loju-drawer-top">
                 <button
+                  type="button"
                   class="loju-drawer-copy-btn"
-                  onclick="navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)"
+                  {...{
+                    onclick:
+                      "navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)",
+                  }}
                 >
                   COPY LINK
                 </button>
@@ -182,13 +202,21 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   <span class="loju-drawer-label">LINKS:</span>
                   <ul class="loju-drawer-links-list">
                     {relatedNotes.map((relatedNote) => {
-                      const isDirectLink = directPaths.has(slugifyPath(relatedNote.path));
+                      const isDirectLink = directPaths.has(
+                        slugifyPath(relatedNote.path),
+                      );
                       return (
                         <li>
-                          <a href={relatedNote.path === "index" ? "/" : `/${encodePath(relatedNote.path)}`}>
+                          <a
+                            href={relatedNote.path === "index"
+                              ? "/"
+                              : `/${encodePath(relatedNote.path)}`}
+                          >
                             {relatedNote.title}
                           </a>
-                          {!isDirectLink && <span class="loju-drawer-link-badge">recent</span>}
+                          {!isDirectLink && (
+                            <span class="loju-drawer-link-badge">recent</span>
+                          )}
                         </li>
                       );
                     })}
@@ -205,12 +233,13 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           ? (
             <article>
               {!isIndex && (() => {
-                const pubTimestamp = note.frontmatter?.first_published || note.ctime;
+                const pubTimestamp = note.frontmatter?.first_published ||
+                  note.ctime;
                 const showPub = !!pubTimestamp;
                 const pubDate = pubTimestamp ? new Date(pubTimestamp) : null;
                 const editDate = new Date(note.mtime);
-                
-                const isSameDay = pubDate && 
+
+                const isSameDay = pubDate &&
                   pubDate.getFullYear() === editDate.getFullYear() &&
                   pubDate.getMonth() === editDate.getMonth() &&
                   pubDate.getDate() === editDate.getDate();
@@ -219,20 +248,22 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   <header class="loju-note-meta-header">
                     <h1 class="loju-note-title">{note.title}</h1>
                     <div class="loju-note-meta">
-                      {isSameDay || !showPub ? (
-                        <span>
-                          PUBLISHED: {formatDate(pubTimestamp || note.mtime)}
-                        </span>
-                      ) : (
-                        <>
+                      {isSameDay || !showPub
+                        ? (
                           <span>
-                            EDITED: {formatDate(note.mtime)}
+                            PUBLISHED: {formatDate(pubTimestamp || note.mtime)}
                           </span>
-                          <span>
-                            PUBLISHED: {formatDate(pubTimestamp!)}
-                          </span>
-                        </>
-                      )}
+                        )
+                        : (
+                          <>
+                            <span>
+                              EDITED: {formatDate(note.mtime)}
+                            </span>
+                            <span>
+                              PUBLISHED: {formatDate(pubTimestamp!)}
+                            </span>
+                          </>
+                        )}
                     </div>
                   </header>
                 );

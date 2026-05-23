@@ -64,31 +64,34 @@ export function encodePath(path: string): string {
 export function getSnippet(content: string, maxLength = 160): string {
   // Strip frontmatter first
   let text = stripFrontmatter(content);
-  
+
   // Replace headings: "# heading" -> ""
   text = text.replace(/^#+\s+/gm, "");
-  
+
   // Replace Obsidian wikilinks: "[[note|alias]]" -> "alias" or "note"
-  text = text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, target, alias) => {
-    return alias ? alias.trim() : target.trim();
-  });
-  
+  text = text.replace(
+    /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
+    (_, target, alias) => {
+      return alias ? alias.trim() : target.trim();
+    },
+  );
+
   // Replace standard markdown links: "[text](url)" -> "text"
   text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-  
+
   // Replace highlights: "==text==" -> "text"
   text = text.replace(/==([^=]+)==/g, "$1");
-  
+
   // Replace inline code, bold, italics, etc.
   text = text.replace(/[`*_~]/g, "");
-  
+
   // Replace multiple whitespace/newlines with a single space
   text = text.replace(/\s+/g, " ").trim();
-  
+
   if (text.length <= maxLength) {
     return text;
   }
-  
+
   // Truncate cleanly at a space if possible
   const truncated = text.slice(0, maxLength);
   const lastSpace = truncated.lastIndexOf(" ");
@@ -161,14 +164,49 @@ export function processMarkdownFeatures(
   }).join("");
 }
 
-export function processExternalLinks(html: string): string {
-  return html.replace(/<a\s+([^>]*?)>/gi, (match, attributes) => {
-    const hrefMatch = attributes.match(/href=["'](https?:\/\/[^"']+)["']/i);
-    if (hrefMatch) {
+export function processLinks(html: string, allNotes: Note[] = []): string {
+  const anchorRegex = /<a\s+([^>]*?)>([\s\S]*?)<\/a>/gi;
+
+  return html.replace(anchorRegex, (match, attributes, innerText) => {
+    // 1. External link check
+    const externalHrefMatch = attributes.match(
+      /href=["'](https?:\/\/[^"']+)["']/i,
+    );
+    if (externalHrefMatch) {
       if (!/target=["']_blank["']/i.test(attributes)) {
-        return `<a ${attributes} target="_blank" rel="noopener noreferrer">`;
+        return `<a ${attributes} target="_blank" rel="noopener noreferrer">${innerText}</a>`;
+      }
+      return match;
+    }
+
+    // 2. Internal link check
+    const internalHrefMatch = attributes.match(/href=["']\/([^"']*)["']/i);
+    if (internalHrefMatch) {
+      const targetPath = decodeURIComponent(internalHrefMatch[1]);
+      const cleanTargetPath = targetPath.endsWith("/")
+        ? targetPath.slice(0, -1)
+        : targetPath;
+      if (cleanTargetPath === "" || cleanTargetPath.toLowerCase() === "index") {
+        return match;
+      }
+
+      // Check if it links to a static asset (by checking file extension)
+      const hasStaticExtension =
+        /\.(png|jpe?g|gif|svg|ico|webp|pdf|zip|css|js)$/i.test(cleanTargetPath);
+      if (hasStaticExtension) {
+        return match;
+      }
+
+      const slugifiedTarget = slugifyPath(cleanTargetPath);
+      const exists = allNotes.some((n) =>
+        slugifyPath(n.path) === slugifiedTarget
+      );
+
+      if (!exists) {
+        return `<span class="loju-ghost-link" title="👻">${innerText}</span>`;
       }
     }
+
     return match;
   });
 }
@@ -193,7 +231,9 @@ export function getForwardLinks(note: Note, allNotes: Note[]): Note[] {
   while ((match = markdownLinkRegex.exec(content)) !== null) {
     const targetPath = decodeURIComponent(match[1].trim());
     const slugifiedPath = slugifyPath(targetPath);
-    const targetNote = allNotes.find(n => slugifyPath(n.path) === slugifiedPath);
+    const targetNote = allNotes.find((n) =>
+      slugifyPath(n.path) === slugifiedPath
+    );
     if (targetNote && slugifyPath(targetNote.path) !== slugifyPath(note.path)) {
       links.add(targetNote.path);
     }
@@ -201,7 +241,7 @@ export function getForwardLinks(note: Note, allNotes: Note[]): Note[] {
 
   // Map paths back to Note objects
   return Array.from(links)
-    .map(path => allNotes.find(n => n.path === path))
+    .map((path) => allNotes.find((n) => n.path === path))
     .filter((n): n is Note => n !== undefined);
 }
 
@@ -213,7 +253,7 @@ export function getBacklinks(note: Note, allNotes: Note[]): Note[] {
     if (slugifyPath(otherNote.path) === noteSlug) continue;
 
     const forwardLinks = getForwardLinks(otherNote, allNotes);
-    if (forwardLinks.some(n => slugifyPath(n.path) === noteSlug)) {
+    if (forwardLinks.some((n) => slugifyPath(n.path) === noteSlug)) {
       backlinks.add(otherNote);
     }
   }
@@ -238,7 +278,10 @@ export function getRelatedNotes(note: Note, allNotes: Note[]): Note[] {
 
   // Sort notes by date to get recent notes
   const sortedRecent = [...allNotes]
-    .filter(n => slugifyPath(n.path) !== slugifyPath(note.path) && !combined.has(slugifyPath(n.path)))
+    .filter((n) =>
+      slugifyPath(n.path) !== slugifyPath(note.path) &&
+      !combined.has(slugifyPath(n.path))
+    )
     .sort((a, b) => {
       const dateA = a.frontmatter?.first_published || a.ctime || a.mtime;
       const dateB = b.frontmatter?.first_published || b.ctime || b.mtime;

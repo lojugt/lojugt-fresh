@@ -86,7 +86,9 @@ html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
   font-size: 106.25%;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -199,7 +201,9 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -237,7 +241,9 @@ body {
 }
 
 .loju-brand {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -266,7 +272,9 @@ body {
   text-overflow: ellipsis;
   max-width: 180px;
   transition: all 150ms ease;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-weight: 700;
   cursor: pointer;
 }
@@ -361,8 +369,6 @@ body {
   text-decoration: underline;
 }
 
-
-
 .loju-header-info-drawer {
   width: 100%;
   padding: 1.25rem 1.5rem;
@@ -373,7 +379,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 .loju-drawer-top {
@@ -534,7 +542,9 @@ body {
 }
 
 .loju-note-title {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   font-size: 2.25rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -553,7 +563,9 @@ body {
   font-size: 0.725rem;
   color: var(--text-secondary);
   text-align: left;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   line-height: 1;
   margin-top: 0.25rem;
   margin-bottom: 0;
@@ -589,7 +601,9 @@ body {
 .loju-markdown h5,
 .loju-markdown h6 {
   color: var(--text-primary);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   margin-top: 1.2rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
@@ -606,9 +620,15 @@ body {
   margin-top: 0;
 }
 
-.loju-markdown h1 { font-size: 2rem; }
-.loju-markdown h2 { font-size: 1.5rem; }
-.loju-markdown h3 { font-size: 1.25rem; }
+.loju-markdown h1 {
+  font-size: 2rem;
+}
+.loju-markdown h2 {
+  font-size: 1.5rem;
+}
+.loju-markdown h3 {
+  font-size: 1.25rem;
+}
 
 .loju-markdown p,
 .loju-markdown ul,
@@ -733,7 +753,9 @@ mark.highlight,
 }
 
 .loju-empty-title {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   font-size: 2.5rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -768,4 +790,14 @@ mark.highlight,
 .loju-no-data {
   color: #777777;
   font-size: 0.75rem;
+}
+
+.loju-ghost-link {
+  color: var(--link-color);
+  text-decoration: none;
+  cursor: help;
+}
+
+.loju-ghost-link:hover {
+  text-decoration: none;
 }

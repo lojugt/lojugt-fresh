@@ -1,4 +1,4 @@
-import { define, openKv, Note, slugifyPath, encodePath } from "../utils.ts";
+import { define, encodePath, Note, openKv, slugifyPath } from "../utils.ts";
 
 export const handler = define.handlers({
   async GET(_ctx) {
@@ -22,10 +22,10 @@ export const handler = define.handlers({
       for (const note of notes) {
         const slugifiedPath = slugifyPath(note.path);
         if (slugifiedPath === "index") continue; // 'index' is the homepage, already handled
-        
+
         const loc = `https://loju.ca/${encodePath(slugifiedPath)}`;
         const lastmod = new Date(note.mtime).toISOString().split("T")[0];
-        
+
         urls.push(`  <url>
     <loc>${loc}</loc>
     <lastmod>${lastmod}</lastmod>

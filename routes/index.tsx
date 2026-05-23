@@ -1,14 +1,13 @@
 import {
   define,
   encodePath,
-  formatDate,
   getBacklinks,
   getForwardLinks,
   getRelatedNotes,
   getSnippet,
   Note,
   openKv,
-  processExternalLinks,
+  processLinks,
   processMarkdownFeatures,
   slugifyPath,
   stripFrontmatter,
@@ -50,15 +49,18 @@ export const handler = define.handlers({
 
       if (note) {
         _ctx.state.title = note.title;
-        _ctx.state.description = note.frontmatter?.description || getSnippet(note.content);
+        _ctx.state.description = note.frontmatter?.description ||
+          getSnippet(note.content);
         if (note.tags && note.tags.length > 0) {
           _ctx.state.tags = note.tags;
         }
         _ctx.state.dateModified = note.mtime;
-        _ctx.state.datePublished = note.frontmatter?.first_published || note.ctime || note.mtime;
+        _ctx.state.datePublished = note.frontmatter?.first_published ||
+          note.ctime || note.mtime;
       } else {
         _ctx.state.title = "Loju - Home";
-        _ctx.state.description = "A minimalist public notebook powered by Obsidian and Deno KV.";
+        _ctx.state.description =
+          "A minimalist public notebook powered by Obsidian and Deno KV.";
       }
 
       return {
@@ -86,10 +88,10 @@ export default define.page<typeof handler>(function Home({ data }) {
   const directPaths = new Set(
     note
       ? [
-          ...getForwardLinks(note, notes).map((n) => slugifyPath(n.path)),
-          ...getBacklinks(note, notes).map((n) => slugifyPath(n.path)),
-        ]
-      : []
+        ...getForwardLinks(note, notes).map((n) => slugifyPath(n.path)),
+        ...getBacklinks(note, notes).map((n) => slugifyPath(n.path)),
+      ]
+      : [],
   );
 
   let htmlContent = "";
@@ -99,7 +101,7 @@ export default define.page<typeof handler>(function Home({ data }) {
       notes || [],
     );
     const rawHtml = render(cleanMarkdown);
-    htmlContent = processExternalLinks(rawHtml);
+    htmlContent = processLinks(rawHtml, notes || []);
   }
 
   if (note) {
@@ -111,7 +113,11 @@ export default define.page<typeof handler>(function Home({ data }) {
             <summary class="loju-header-summary">
               <div class="loju-page-header-inner">
                 <div class="loju-page-header-left">
-                  <a href="https://loju.ca" class="loju-brand" onclick="event.stopPropagation();">
+                  <a
+                    href="https://loju.ca"
+                    class="loju-brand"
+                    {...{ onclick: "event.stopPropagation();" }}
+                  >
                     LOJU
                   </a>
                 </div>
@@ -122,9 +128,13 @@ export default define.page<typeof handler>(function Home({ data }) {
                 </div>
                 <div class="loju-page-header-right">
                   <button
+                    type="button"
                     class="loju-theme-toggle-btn"
                     title="Toggle day/night mode"
-                    onclick="event.stopPropagation(); window.toggleLojuTheme();"
+                    {...{
+                      onclick:
+                        "event.stopPropagation(); window.toggleLojuTheme();",
+                    }}
                   >
                     <span class="loju-toggle-icon">🍍</span>
                     <span id="loju-theme-status">LUX</span>
@@ -135,8 +145,12 @@ export default define.page<typeof handler>(function Home({ data }) {
             <div class="loju-header-info-drawer">
               <div class="loju-drawer-top">
                 <button
+                  type="button"
                   class="loju-drawer-copy-btn"
-                  onclick="navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)"
+                  {...{
+                    onclick:
+                      "navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)",
+                  }}
                 >
                   COPY LINK
                 </button>
@@ -158,13 +172,21 @@ export default define.page<typeof handler>(function Home({ data }) {
                   <span class="loju-drawer-label">LINKS:</span>
                   <ul class="loju-drawer-links-list">
                     {relatedNotes.map((relatedNote) => {
-                      const isDirectLink = directPaths.has(slugifyPath(relatedNote.path));
+                      const isDirectLink = directPaths.has(
+                        slugifyPath(relatedNote.path),
+                      );
                       return (
                         <li>
-                          <a href={relatedNote.path === "index" ? "/" : `/${encodePath(relatedNote.path)}`}>
+                          <a
+                            href={relatedNote.path === "index"
+                              ? "/"
+                              : `/${encodePath(relatedNote.path)}`}
+                          >
                             {relatedNote.title}
                           </a>
-                          {!isDirectLink && <span class="loju-drawer-link-badge">recent</span>}
+                          {!isDirectLink && (
+                            <span class="loju-drawer-link-badge">recent</span>
+                          )}
                         </li>
                       );
                     })}
@@ -174,7 +196,6 @@ export default define.page<typeof handler>(function Home({ data }) {
             </div>
           </details>
         </header>
-
 
         <main class="loju-page-main">
           <article>

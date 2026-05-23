@@ -4,25 +4,29 @@ import { define } from "../utils.ts";
 export default define.page(function App({ Component, state }) {
   const jsonLd = state.title
     ? {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": state.title,
-        "description": state.description ?? "",
-        "dateModified": state.dateModified ? new Date(state.dateModified).toISOString() : undefined,
-        "datePublished": state.datePublished ? new Date(state.datePublished).toISOString() : undefined,
-        "author": {
-          "@type": "Person",
-          "name": "Loju"
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": state.title,
+      "description": state.description ?? "",
+      "dateModified": state.dateModified
+        ? new Date(state.dateModified).toISOString()
+        : undefined,
+      "datePublished": state.datePublished
+        ? new Date(state.datePublished).toISOString()
+        : undefined,
+      "author": {
+        "@type": "Person",
+        "name": "Loju",
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Loju",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://loju.ca/favicon.svg",
         },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Loju",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://loju.ca/favicon.svg"
-          }
-        }
-      }
+      },
+    }
     : null;
 
   return (
@@ -31,21 +35,29 @@ export default define.page(function App({ Component, state }) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{state.title ? `${state.title} | Loju` : "Loju"}</title>
-        {state.description && <meta name="description" content={state.description} />}
+        {state.description && (
+          <meta name="description" content={state.description} />
+        )}
         {state.tags && state.tags.length > 0 && (
           <meta name="keywords" content={state.tags.join(", ")} />
         )}
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={state.title ? `${state.title} | Loju` : "Loju"} />
+        <meta
+          property="og:title"
+          content={state.title ? `${state.title} | Loju` : "Loju"}
+        />
         {state.description && (
           <meta property="og:description" content={state.description} />
         )}
-        
+
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={state.title ? `${state.title} | Loju` : "Loju"} />
+        <meta
+          name="twitter:title"
+          content={state.title ? `${state.title} | Loju` : "Loju"}
+        />
         {state.description && (
           <meta name="twitter:description" content={state.description} />
         )}
@@ -60,16 +72,22 @@ export default define.page(function App({ Component, state }) {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <style dangerouslySetInnerHTML={{ __html: CSS }} />
         <link rel="stylesheet" href="/styles.css" />
-        <script dangerouslySetInnerHTML={{ __html: `
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
           (function() {
             const savedTheme = localStorage.getItem('loju-theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
           })();
-        ` }} />
+        `,
+          }}
+        />
       </head>
       <body>
         <Component />
-        <script dangerouslySetInnerHTML={{ __html: `
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
           function updateLojuThemeUI() {
             const theme = document.documentElement.getAttribute('data-theme') || 'light';
             
@@ -111,7 +129,9 @@ export default define.page(function App({ Component, state }) {
           if (document.readyState !== 'loading') {
             updateLojuThemeUI();
           }
-        ` }} />
+        `,
+          }}
+        />
       </body>
     </html>
   );

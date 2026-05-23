@@ -1,4 +1,4 @@
-import { define, openKv, slugifyPath, encodePath } from "../../utils.ts";
+import { define, encodePath, openKv, slugifyPath } from "../../utils.ts";
 
 const AUTH_TOKEN = Deno.env.get("AUTH_TOKEN");
 
@@ -83,7 +83,9 @@ export const handler = define.handlers({
         console.log(`[PUBLISH] Saved note: ${slugifiedPath} (Title: ${title})`);
 
         // Ping IndexNow to notify search engines of the new/updated note
-        const noteUrl = `https://loju.ca${slugifiedPath === "index" ? "/" : "/" + encodePath(slugifiedPath)}`;
+        const noteUrl = `https://loju.ca${
+          slugifiedPath === "index" ? "/" : "/" + encodePath(slugifiedPath)
+        }`;
         pingIndexNow(noteUrl);
 
         return new Response(
@@ -103,7 +105,9 @@ export const handler = define.handlers({
         console.log(`[UNPUBLISH] Deleted note: ${slugifiedPath}`);
 
         // Ping IndexNow to notify search engines of note deletion
-        const noteUrl = `https://loju.ca${slugifiedPath === "index" ? "/" : "/" + encodePath(slugifiedPath)}`;
+        const noteUrl = `https://loju.ca${
+          slugifiedPath === "index" ? "/" : "/" + encodePath(slugifiedPath)
+        }`;
         pingIndexNow(noteUrl);
 
         return new Response(
