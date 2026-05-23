@@ -165,21 +165,39 @@ export default define.page<typeof handler>(function NoteView({ data }) {
         {note
           ? (
             <article>
-              {!isIndex && (
-                <header class="loju-note-meta-header">
-                  <h1 class="loju-note-title">{note.title}</h1>
-                  <div class="loju-note-meta">
-                    {(note.frontmatter?.first_published || note.ctime) && (
-                      <span>
-                        PUBLISHED: {formatDate(note.frontmatter?.first_published || note.ctime!)}
-                      </span>
-                    )}
-                    <span>
-                      EDITED: {formatDate(note.mtime)}
-                    </span>
-                  </div>
-                </header>
-              )}
+              {!isIndex && (() => {
+                const pubTimestamp = note.frontmatter?.first_published || note.ctime;
+                const showPub = !!pubTimestamp;
+                const pubDate = pubTimestamp ? new Date(pubTimestamp) : null;
+                const editDate = new Date(note.mtime);
+                
+                const isSameDay = pubDate && 
+                  pubDate.getFullYear() === editDate.getFullYear() &&
+                  pubDate.getMonth() === editDate.getMonth() &&
+                  pubDate.getDate() === editDate.getDate();
+
+                return (
+                  <header class="loju-note-meta-header">
+                    <h1 class="loju-note-title">{note.title}</h1>
+                    <div class="loju-note-meta">
+                      {isSameDay || !showPub ? (
+                        <span>
+                          PUBLISHED: {formatDate(pubTimestamp || note.mtime)}
+                        </span>
+                      ) : (
+                        <>
+                          <span>
+                            EDITED: {formatDate(note.mtime)}
+                          </span>
+                          <span>
+                            PUBLISHED: {formatDate(pubTimestamp!)}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </header>
+                );
+              })()}
               {/* Rendered Markdown Body */}
               <div
                 class="markdown-body loju-markdown"
