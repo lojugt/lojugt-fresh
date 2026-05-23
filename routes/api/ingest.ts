@@ -2,6 +2,26 @@ import { define, openKv } from "../../utils.ts";
 
 const AUTH_TOKEN = Deno.env.get("AUTH_TOKEN");
 
+async function pingIndexNow(url: string) {
+  try {
+    const response = await fetch("https://api.indexnow.org/indexnow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        host: "loju.ca",
+        key: "7f2bc8a614ef4bca998379c3f25c760a",
+        keyLocation: "https://loju.ca/7f2bc8a614ef4bca998379c3f25c760a.txt",
+        urlList: [url],
+      }),
+    });
+    console.log(`[IndexNow] Pinged ${url}, status: ${response.status}`);
+  } catch (e) {
+    console.error(`[IndexNow] Failed to ping IndexNow for ${url}:`, e);
+  }
+}
+
 export const handler = define.handlers({
   async POST(ctx) {
     const { req } = ctx;
@@ -60,6 +80,11 @@ export const handler = define.handlers({
         await kv.set(["notes", cleanPath], noteObject);
 
         console.log(`[PUBLISH] Saved note: ${cleanPath} (Title: ${title})`);
+
+        // Ping IndexNow to notify search engines of the new/updated note
+        const noteUrl = `https://loju.ca${cleanPath === "index" ? "/" : "/" + encodeURIComponent(cleanPath)}`;
+        pingIndexNow(noteUrl);
+
         return new Response(
           JSON.stringify({
             success: true,
@@ -75,6 +100,11 @@ export const handler = define.handlers({
         await kv.delete(["notes", cleanPath]);
 
         console.log(`[UNPUBLISH] Deleted note: ${cleanPath}`);
+
+        // Ping IndexNow to notify search engines of note deletion
+        const noteUrl = `https://loju.ca${cleanPath === "index" ? "/" : "/" + encodeURIComponent(cleanPath)}`;
+        pingIndexNow(noteUrl);
+
         return new Response(
           JSON.stringify({
             success: true,

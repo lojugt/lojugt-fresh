@@ -69,6 +69,8 @@ export const handler = define.handlers({
         if (note.tags && note.tags.length > 0) {
           ctx.state.tags = note.tags;
         }
+        ctx.state.dateModified = note.mtime;
+        ctx.state.datePublished = note.frontmatter?.first_published || note.ctime || note.mtime;
       }
 
       return {

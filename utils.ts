@@ -4,6 +4,8 @@ export interface State {
   title?: string;
   description?: string;
   tags?: string[];
+  dateModified?: number;
+  datePublished?: number | string;
 }
 
 export const define = createDefine<State>();

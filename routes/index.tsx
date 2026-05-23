@@ -49,6 +49,8 @@ export const handler = define.handlers({
         if (note.tags && note.tags.length > 0) {
           _ctx.state.tags = note.tags;
         }
+        _ctx.state.dateModified = note.mtime;
+        _ctx.state.datePublished = note.frontmatter?.first_published || note.ctime || note.mtime;
       } else {
         _ctx.state.title = "Loju - Home";
         _ctx.state.description = "A minimalist public notebook powered by Obsidian and Deno KV.";

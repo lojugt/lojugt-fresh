@@ -2,7 +2,7 @@
 
 A Deno Fresh web application that serves and renders markdown notes published directly from an Obsidian vault.
 
-This repository is the frontend component of the Loju ecosystem. The Obsidian plugin used to publish notes is hosted in the [lojugt-plugin](https://github.com/lojugt/lojugt-plugin) repository.
+This repository is the frontend component of the Loju ecosystem. The Obsidian plugin used to publish notes is hosted in the [loju-plugin](https://github.com/lojugt/loju-plugin) repository.
 
 ## Use Case
 
@@ -10,7 +10,7 @@ This web application enables seamless, instant publishing of personal markdown n
 
 ## Project Vision & Inspiration
 
-Together, these repositories form **Loju**, a custom, lightweight, edge-native note-publishing pipeline. The project is inspired by traditional static-site-generator publishing setups (like Hugo, Jekyll, or Astro) and official Obsidian Publish, but aims for a zero-build, dynamic, database-driven approach. By utilizing Deno Fresh for speedy server-side rendering and Deno KV for lightweight, edge-native storage, it avoids slow rebuilds or full site redeploys, replacing them with instant database updates. Visually, the site features a bold, graphic aesthetic with Korean/Japanese-inspired headings (`Do Hyeon` and `Dela Gothic One`) and a clean monospace body font (`JetBrains Mono`).
+Together, these repositories form **Loju**, a custom, lightweight, edge-native note-publishing pipeline. The project is inspired by traditional static-site-generator publishing setups (like Hugo, Jekyll, or Astro) and official Obsidian Publish, but aims for a zero-build, dynamic, database-driven approach. By utilizing Deno Fresh for speedy server-side rendering and Deno KV for lightweight, edge-native storage, it avoids slow rebuilds or full site redeploys, replacing them with instant database updates.
 
 ## Development
 

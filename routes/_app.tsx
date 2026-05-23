@@ -2,6 +2,29 @@ import { CSS } from "@deno/gfm";
 import { define } from "../utils.ts";
 
 export default define.page(function App({ Component, state }) {
+  const jsonLd = state.title
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": state.title,
+        "description": state.description ?? "",
+        "dateModified": state.dateModified ? new Date(state.dateModified).toISOString() : undefined,
+        "datePublished": state.datePublished ? new Date(state.datePublished).toISOString() : undefined,
+        "author": {
+          "@type": "Person",
+          "name": "Loju"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Loju",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://loju.ca/favicon.svg"
+          }
+        }
+      }
+    : null;
+
   return (
     <html>
       <head>
@@ -25,6 +48,13 @@ export default define.page(function App({ Component, state }) {
         <meta name="twitter:title" content={state.title ? `${state.title} | Loju` : "Loju"} />
         {state.description && (
           <meta name="twitter:description" content={state.description} />
+        )}
+
+        {jsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
         )}
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
