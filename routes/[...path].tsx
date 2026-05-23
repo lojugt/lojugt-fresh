@@ -112,7 +112,12 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 </a>
               </div>
               <div class="loju-page-header-middle">
-                <span class="loju-page-path">
+                <span
+                  class="loju-page-path"
+                  data-path={note ? note.path : "ERROR"}
+                  title="Click to copy link"
+                  onclick="event.stopPropagation(); const path = this.getAttribute('data-path'); const shareUrl = window.location.origin + '/' + (path === 'index' ? '' : encodeURIComponent(path)); navigator.clipboard.writeText(shareUrl); const originalText = this.innerText; this.innerText = 'LINK COPIED!'; setTimeout(() => { this.innerText = originalText; }, 1500);"
+                >
                   {note ? note.path : "ERROR"}
                 </span>
               </div>
@@ -134,6 +139,14 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 <span class="loju-info-key">TITLE:</span>
                 <span class="loju-info-val">{note.title}</span>
               </div>
+              {(note.frontmatter?.first_published || note.ctime) && (
+                <div class="loju-info-row">
+                  <span class="loju-info-key">PUBLISHED:</span>
+                  <span class="loju-info-val">
+                    {formatDate(note.frontmatter?.first_published || note.ctime!)}
+                  </span>
+                </div>
+              )}
               <div class="loju-info-row">
                 <span class="loju-info-key">UPDATED:</span>
                 <span class="loju-info-val">{formatDate(note.mtime)}</span>
@@ -146,18 +159,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   </span>
                 </div>
               )}
-              <div class="loju-info-row">
-                <span class="loju-info-key">SHARE:</span>
-                <span class="loju-info-val">
-                  <button
-                    class="loju-share-btn"
-                    data-path={note.path}
-                    onclick="event.stopPropagation(); const path = this.getAttribute('data-path'); const shareUrl = window.location.origin + '/' + (path === 'index' ? '' : encodeURIComponent(path)); navigator.clipboard.writeText(shareUrl); const originalText = this.innerText; this.innerText = 'COPIED!'; this.style.color = '#ff79c6'; setTimeout(() => { this.innerText = originalText; this.style.color = ''; }, 2000);"
-                  >
-                    [COPY LINK]
-                  </button>
-                </span>
-              </div>
             </div>
           )}
         </details>
