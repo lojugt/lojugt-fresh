@@ -60,7 +60,7 @@ export const handler = define.handlers({
       }
 
       const cleanPath = path && path.endsWith(".md") ? path.slice(0, -3) : path;
-      const slugifiedPath = slugifyPath(cleanPath);
+      const slugifiedPath = cleanPath ? slugifyPath(cleanPath) : "";
       const kv = await openKv();
 
       if (action === "publish") {
