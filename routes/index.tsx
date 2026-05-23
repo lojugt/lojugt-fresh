@@ -1,11 +1,16 @@
 import {
   define,
+  encodePath,
   formatDate,
+  getBacklinks,
+  getForwardLinks,
+  getRelatedNotes,
   getSnippet,
   Note,
   openKv,
   processExternalLinks,
   processMarkdownFeatures,
+  slugifyPath,
   stripFrontmatter,
 } from "../utils.ts";
 import { render } from "@deno/gfm";
@@ -77,6 +82,16 @@ export const handler = define.handlers({
 export default define.page<typeof handler>(function Home({ data }) {
   const { note, notes } = data;
 
+  const relatedNotes = note ? getRelatedNotes(note, notes) : [];
+  const directPaths = new Set(
+    note
+      ? [
+          ...getForwardLinks(note, notes).map((n) => slugifyPath(n.path)),
+          ...getBacklinks(note, notes).map((n) => slugifyPath(n.path)),
+        ]
+      : []
+  );
+
   let htmlContent = "";
   if (note) {
     const cleanMarkdown = processMarkdownFeatures(
@@ -118,16 +133,42 @@ export default define.page<typeof handler>(function Home({ data }) {
               </div>
             </summary>
             <div class="loju-header-info-drawer">
-              <div class="loju-info-row">
-                <span class="loju-info-key">TITLE:</span>
-                <span class="loju-info-val">{note.title}</span>
+              <div class="loju-drawer-top">
+                <button
+                  class="loju-drawer-copy-btn"
+                  onclick="navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)"
+                >
+                  COPY LINK
+                </button>
               </div>
+
               {note.tags && note.tags.length > 0 && (
-                <div class="loju-info-row">
-                  <span class="loju-info-key">TAGS:</span>
-                  <span class="loju-info-val">
-                    {note.tags.map((tag) => `#${tag}`).join(" ")}
-                  </span>
+                <div class="loju-drawer-section">
+                  <span class="loju-drawer-label">TAGS:</span>
+                  <div class="loju-drawer-tags-list">
+                    {note.tags.map((tag) => (
+                      <span class="loju-drawer-tag">#{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {relatedNotes.length > 0 && (
+                <div class="loju-drawer-section">
+                  <span class="loju-drawer-label">LINKS:</span>
+                  <ul class="loju-drawer-links-list">
+                    {relatedNotes.map((relatedNote) => {
+                      const isDirectLink = directPaths.has(slugifyPath(relatedNote.path));
+                      return (
+                        <li>
+                          <a href={relatedNote.path === "index" ? "/" : `/${encodePath(relatedNote.path)}`}>
+                            {relatedNote.title}
+                          </a>
+                          {!isDirectLink && <span class="loju-drawer-link-badge">recent</span>}
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               )}
             </div>

@@ -172,3 +172,81 @@ export function processExternalLinks(html: string): string {
     return match;
   });
 }
+
+export function getForwardLinks(note: Note, allNotes: Note[]): Note[] {
+  const content = note.content;
+  const links = new Set<string>();
+
+  // 1. Match wikilinks [[Target]] or [[Target|Alias]]
+  const wikilinkRegex = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
+  let match;
+  while ((match = wikilinkRegex.exec(content)) !== null) {
+    const target = match[1].trim();
+    const resolvedPath = resolveWikilink(target, allNotes);
+    if (resolvedPath && slugifyPath(resolvedPath) !== slugifyPath(note.path)) {
+      links.add(resolvedPath);
+    }
+  }
+
+  // 2. Match standard markdown links like [text](/path)
+  const markdownLinkRegex = /\[[^\]]*\]\(\/([^\)]+)\)/g;
+  while ((match = markdownLinkRegex.exec(content)) !== null) {
+    const targetPath = decodeURIComponent(match[1].trim());
+    const slugifiedPath = slugifyPath(targetPath);
+    const targetNote = allNotes.find(n => slugifyPath(n.path) === slugifiedPath);
+    if (targetNote && slugifyPath(targetNote.path) !== slugifyPath(note.path)) {
+      links.add(targetNote.path);
+    }
+  }
+
+  // Map paths back to Note objects
+  return Array.from(links)
+    .map(path => allNotes.find(n => n.path === path))
+    .filter((n): n is Note => n !== undefined);
+}
+
+export function getBacklinks(note: Note, allNotes: Note[]): Note[] {
+  const backlinks = new Set<Note>();
+  const noteSlug = slugifyPath(note.path);
+
+  for (const otherNote of allNotes) {
+    if (slugifyPath(otherNote.path) === noteSlug) continue;
+
+    const forwardLinks = getForwardLinks(otherNote, allNotes);
+    if (forwardLinks.some(n => slugifyPath(n.path) === noteSlug)) {
+      backlinks.add(otherNote);
+    }
+  }
+
+  return Array.from(backlinks);
+}
+
+export function getRelatedNotes(note: Note, allNotes: Note[]): Note[] {
+  const forward = getForwardLinks(note, allNotes);
+  const backward = getBacklinks(note, allNotes);
+
+  const combined = new Map<string, Note>();
+  for (const n of [...forward, ...backward]) {
+    combined.set(slugifyPath(n.path), n);
+  }
+
+  const related = Array.from(combined.values());
+
+  if (related.length >= 5) {
+    return related;
+  }
+
+  // Sort notes by date to get recent notes
+  const sortedRecent = [...allNotes]
+    .filter(n => slugifyPath(n.path) !== slugifyPath(note.path) && !combined.has(slugifyPath(n.path)))
+    .sort((a, b) => {
+      const dateA = a.frontmatter?.first_published || a.ctime || a.mtime;
+      const dateB = b.frontmatter?.first_published || b.ctime || b.mtime;
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
+
+  const needed = 5 - related.length;
+  const filled = sortedRecent.slice(0, needed);
+
+  return [...related, ...filled];
+}

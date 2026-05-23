@@ -365,39 +365,106 @@ body {
 
 .loju-header-info-drawer {
   width: 100%;
-  padding: 1.5rem 1.5rem 1.25rem 1.5rem;
-  font-size: 0.9rem;
+  padding: 1.25rem 1.5rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   border-top: 1px solid var(--link-color);
   border-bottom: 1px dashed var(--border-dashed);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-.loju-info-row {
+.loju-drawer-top {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 0.5rem;
-  line-height: 1.4;
-  width: 100%;
+  justify-content: flex-start;
+  margin-bottom: 0.25rem;
 }
 
-.loju-info-key {
+.loju-drawer-copy-btn {
+  background: transparent;
+  border: 1px solid var(--tag-border);
+  color: var(--text-secondary);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: inherit;
+}
+
+.loju-drawer-copy-btn:hover {
+  border-color: var(--link-color);
+  color: var(--text-primary);
+  background-color: var(--tag-bg);
+}
+
+.loju-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.loju-drawer-label {
   font-weight: 700;
   color: var(--drawer-key);
-  width: 90px;
-  flex-shrink: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
-.loju-info-val {
-  color: var(--drawer-val);
-  flex-grow: 1;
-  min-width: 0;
-  white-space: nowrap;
+.loju-drawer-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.loju-drawer-tag {
+  font-size: 0.75rem;
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.loju-drawer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.loju-drawer-links-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.775rem;
+}
+
+.loju-drawer-links-list a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 150ms ease;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loju-drawer-links-list a:hover {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.loju-drawer-link-badge {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border-dashed);
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .loju-share-btn {
