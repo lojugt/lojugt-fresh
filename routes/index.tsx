@@ -79,8 +79,13 @@ export default define.page<typeof handler>(function Home({ data }) {
 
   let htmlContent = "";
   if (note) {
+    const contentWithoutFrontmatter = stripFrontmatter(note.content);
+    const contentWithoutLeadingHeader = contentWithoutFrontmatter.trimStart().startsWith("# ")
+      ? contentWithoutFrontmatter.trimStart().replace(/^#\s+.*(?:\r?\n|$)/, "")
+      : contentWithoutFrontmatter;
+
     const cleanMarkdown = processMarkdownFeatures(
-      stripFrontmatter(note.content),
+      contentWithoutLeadingHeader,
       notes || [],
     );
     const rawHtml = render(cleanMarkdown);
@@ -122,18 +127,6 @@ export default define.page<typeof handler>(function Home({ data }) {
                 <span class="loju-info-key">TITLE:</span>
                 <span class="loju-info-val">{note.title}</span>
               </div>
-              {(note.frontmatter?.first_published || note.ctime) && (
-                <div class="loju-info-row">
-                  <span class="loju-info-key">PUBLISHED:</span>
-                  <span class="loju-info-val">
-                    {formatDate(note.frontmatter?.first_published || note.ctime!)}
-                  </span>
-                </div>
-              )}
-              <div class="loju-info-row">
-                <span class="loju-info-key">UPDATED:</span>
-                <span class="loju-info-val">{formatDate(note.mtime)}</span>
-              </div>
               {note.tags && note.tags.length > 0 && (
                 <div class="loju-info-row">
                   <span class="loju-info-key">TAGS:</span>
@@ -149,6 +142,19 @@ export default define.page<typeof handler>(function Home({ data }) {
 
         <main class="loju-page-main">
           <article>
+            <header class="loju-note-meta-header">
+              <h1 class="loju-note-title">{note.title}</h1>
+              <div class="loju-note-meta">
+                {(note.frontmatter?.first_published || note.ctime) && (
+                  <span>
+                    PUBLISHED: {formatDate(note.frontmatter?.first_published || note.ctime!)}
+                  </span>
+                )}
+                <span>
+                  EDITED: {formatDate(note.mtime)}
+                </span>
+              </div>
+            </header>
             {/* Rendered Markdown Body */}
             <div
               class="markdown-body loju-markdown"
