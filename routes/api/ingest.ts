@@ -1,4 +1,4 @@
-import { define, openKv } from "../../utils.ts";
+import { define, openKv, slugifyPath, encodePath } from "../../utils.ts";
 
 const AUTH_TOKEN = Deno.env.get("AUTH_TOKEN");
 
@@ -60,13 +60,14 @@ export const handler = define.handlers({
       }
 
       const cleanPath = path && path.endsWith(".md") ? path.slice(0, -3) : path;
+      const slugifiedPath = slugifyPath(cleanPath);
       const kv = await openKv();
 
       if (action === "publish") {
         const { content, frontmatter, tags, mtime, ctime } = body;
 
         const noteObject = {
-          path: cleanPath,
+          path: slugifiedPath,
           title,
           content,
           frontmatter: frontmatter || {},
@@ -76,13 +77,13 @@ export const handler = define.handlers({
           ingestedAt: Date.now(),
         };
 
-        // Save to Deno KV using the clean path
-        await kv.set(["notes", cleanPath], noteObject);
+        // Save to Deno KV using the slugified path
+        await kv.set(["notes", slugifiedPath], noteObject);
 
-        console.log(`[PUBLISH] Saved note: ${cleanPath} (Title: ${title})`);
+        console.log(`[PUBLISH] Saved note: ${slugifiedPath} (Title: ${title})`);
 
         // Ping IndexNow to notify search engines of the new/updated note
-        const noteUrl = `https://loju.ca${cleanPath === "index" ? "/" : "/" + encodeURIComponent(cleanPath)}`;
+        const noteUrl = `https://loju.ca${slugifiedPath === "index" ? "/" : "/" + encodePath(slugifiedPath)}`;
         pingIndexNow(noteUrl);
 
         return new Response(
@@ -96,13 +97,13 @@ export const handler = define.handlers({
           },
         );
       } else if (action === "unpublish") {
-        // Delete from Deno KV using the clean path
-        await kv.delete(["notes", cleanPath]);
+        // Delete from Deno KV using the slugified path
+        await kv.delete(["notes", slugifiedPath]);
 
-        console.log(`[UNPUBLISH] Deleted note: ${cleanPath}`);
+        console.log(`[UNPUBLISH] Deleted note: ${slugifiedPath}`);
 
         // Ping IndexNow to notify search engines of note deletion
-        const noteUrl = `https://loju.ca${cleanPath === "index" ? "/" : "/" + encodeURIComponent(cleanPath)}`;
+        const noteUrl = `https://loju.ca${slugifiedPath === "index" ? "/" : "/" + encodePath(slugifiedPath)}`;
         pingIndexNow(noteUrl);
 
         return new Response(

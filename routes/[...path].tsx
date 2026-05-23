@@ -1,11 +1,13 @@
 import {
   define,
+  encodePath,
   formatDate,
   getSnippet,
   Note,
   openKv,
   processExternalLinks,
   processMarkdownFeatures,
+  slugifyPath,
   stripFrontmatter,
 } from "../utils.ts";
 import { render } from "@deno/gfm";
@@ -38,6 +40,16 @@ export const handler = define.handlers({
       ? noTrailingSlash.slice(0, -3)
       : noTrailingSlash;
 
+    const slugifiedCleanPath = slugifyPath(cleanPath);
+
+    // Redirect permanently (301) to clean slugified URL if requested URL is not clean
+    if (cleanPath !== slugifiedCleanPath) {
+      return new Response(null, {
+        status: 301,
+        headers: { Location: "/" + encodePath(slugifiedCleanPath) },
+      });
+    }
+
     try {
       const kv = await openKv();
       const entries = kv.list({ prefix: ["notes"] });
@@ -46,14 +58,8 @@ export const handler = define.handlers({
         notes.push(entry.value as Note);
       }
 
-      // Find note case-sensitively first
-      let note = notes.find((n) => n.path === cleanPath);
-
-      // Fallback to case-insensitive match
-      if (!note) {
-        const lowerCleanPath = cleanPath.toLowerCase();
-        note = notes.find((n) => n.path.toLowerCase() === lowerCleanPath);
-      }
+      // Find note by matching slugified path
+      let note = notes.find((n) => slugifyPath(n.path) === slugifiedCleanPath);
 
       if (!note) {
         // Redirect to homepage on failure to find the entry

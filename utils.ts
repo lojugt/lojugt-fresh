@@ -40,6 +40,27 @@ export function stripFrontmatter(content: string): string {
   return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
 }
 
+export function slugifyPath(path: string): string {
+  if (path.toLowerCase() === "index") {
+    return "index";
+  }
+  return path
+    .split("/")
+    .map((part) =>
+      part
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-")
+    )
+    .join("/");
+}
+
+export function encodePath(path: string): string {
+  return path.split("/").map(encodeURIComponent).join("/");
+}
+
 export function getSnippet(content: string, maxLength = 160): string {
   // Strip frontmatter first
   let text = stripFrontmatter(content);
@@ -80,33 +101,22 @@ export function getSnippet(content: string, maxLength = 160): string {
 export function resolveWikilink(target: string, allNotes: Note[]): string {
   // Normalize target: replace backslashes with forward slashes, trim
   const normalizedTarget = target.replace(/\\/g, "/").trim();
+  const targetSlug = slugifyPath(normalizedTarget);
 
-  // 1. Exact match (case-sensitive)
-  let match = allNotes.find((n) => n.path === normalizedTarget);
-  if (match) return match.path;
+  // 1. Match by slugified path
+  let match = allNotes.find((n) => slugifyPath(n.path) === targetSlug);
+  if (match) return slugifyPath(match.path);
 
-  // 2. Exact match (case-insensitive)
-  const lowerTarget = normalizedTarget.toLowerCase();
-  match = allNotes.find((n) => n.path.toLowerCase() === lowerTarget);
-  if (match) return match.path;
+  // 2. Match by filename slug (if target is just filename and path is subfolder/filename)
+  const targetFileSlug = targetSlug.split("/").pop();
+  match = allNotes.find((n) => {
+    const fileSlug = slugifyPath(n.path).split("/").pop();
+    return fileSlug === targetFileSlug;
+  });
+  if (match) return slugifyPath(match.path);
 
-  // 3. Ending match / filename match (e.g. "Anonymous Unreal" matches "subfolder two/Anonymous Unreal")
-  // Case-sensitive check
-  match = allNotes.find((n) =>
-    n.path.endsWith("/" + normalizedTarget) ||
-    n.path.split("/").pop() === normalizedTarget
-  );
-  if (match) return match.path;
-
-  // Case-insensitive check
-  match = allNotes.find((n) =>
-    n.path.toLowerCase().endsWith("/" + lowerTarget) ||
-    n.path.split("/").pop()?.toLowerCase() === lowerTarget
-  );
-  if (match) return match.path;
-
-  // Fallback: return normalizedTarget
-  return normalizedTarget;
+  // Fallback: return targetSlug
+  return targetSlug;
 }
 
 export function processMarkdownFeatures(
@@ -138,9 +148,7 @@ export function processMarkdownFeatures(
           }
 
           const resolvedPath = resolveWikilink(target, allNotes);
-          const encodedTarget = resolvedPath.split("/").map((part: string) =>
-            encodeURIComponent(part)
-          ).join("/");
+          const encodedTarget = encodePath(resolvedPath);
           return `[${alias}](/${encodedTarget})`;
         },
       );
