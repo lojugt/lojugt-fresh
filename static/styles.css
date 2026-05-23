@@ -502,11 +502,20 @@ body {
 .loju-markdown h6 {
   color: var(--text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
   font-weight: 700;
   text-align: left;
   border-bottom: none;
+}
+
+.loju-markdown h1:first-child,
+.loju-markdown h2:first-child,
+.loju-markdown h3:first-child,
+.loju-markdown h4:first-child,
+.loju-markdown h5:first-child,
+.loju-markdown h6:first-child {
+  margin-top: 0;
 }
 
 .loju-markdown h1 { font-size: 2rem; }
