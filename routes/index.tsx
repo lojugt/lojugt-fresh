@@ -99,12 +99,7 @@ export default define.page<typeof handler>(function Home({ data }) {
                   </a>
                 </div>
                 <div class="loju-page-header-middle">
-                  <span
-                    class="loju-page-path"
-                    data-path={note.path}
-                    title="Click to copy link"
-                    onclick="event.stopPropagation(); const path = this.getAttribute('data-path'); const shareUrl = window.location.origin + '/' + (path === 'index' ? '' : encodeURIComponent(path)); navigator.clipboard.writeText(shareUrl); const originalText = this.innerText; this.innerText = 'LINK COPIED!'; setTimeout(() => { this.innerText = originalText; }, 1500);"
-                  >
+                  <span class="loju-page-path">
                     {note.path}
                   </span>
                 </div>
