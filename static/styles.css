@@ -439,8 +439,10 @@ body {
 }
 
 .loju-note-meta-header {
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.6rem;
+  margin-top: 0;
+  padding-top: 0;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--border-color);
   text-align: left;
 }
@@ -485,6 +487,10 @@ body {
   color: var(--text-secondary);
   text-align: left;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .loju-note-meta span {
