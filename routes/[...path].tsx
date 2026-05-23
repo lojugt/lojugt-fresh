@@ -93,9 +93,10 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   const { note, notes } = data;
 
   let htmlContent = "";
+  const isIndex = note && note.path.toLowerCase() === "index";
   if (note) {
     const contentWithoutFrontmatter = stripFrontmatter(note.content);
-    const contentWithoutLeadingHeader = contentWithoutFrontmatter.trimStart().startsWith("# ")
+    const contentWithoutLeadingHeader = (!isIndex && contentWithoutFrontmatter.trimStart().startsWith("# "))
       ? contentWithoutFrontmatter.trimStart().replace(/^#\s+.*(?:\r?\n|$)/, "")
       : contentWithoutFrontmatter;
 
@@ -158,19 +159,21 @@ export default define.page<typeof handler>(function NoteView({ data }) {
         {note
           ? (
             <article>
-              <header class="loju-note-meta-header">
-                <h1 class="loju-note-title">{note.title}</h1>
-                <div class="loju-note-meta">
-                  {(note.frontmatter?.first_published || note.ctime) && (
+              {!isIndex && (
+                <header class="loju-note-meta-header">
+                  <h1 class="loju-note-title">{note.title}</h1>
+                  <div class="loju-note-meta">
+                    {(note.frontmatter?.first_published || note.ctime) && (
+                      <span>
+                        PUBLISHED: {formatDate(note.frontmatter?.first_published || note.ctime!)}
+                      </span>
+                    )}
                     <span>
-                      PUBLISHED: {formatDate(note.frontmatter?.first_published || note.ctime!)}
+                      EDITED: {formatDate(note.mtime)}
                     </span>
-                  )}
-                  <span>
-                    EDITED: {formatDate(note.mtime)}
-                  </span>
-                </div>
-              </header>
+                  </div>
+                </header>
+              )}
               {/* Rendered Markdown Body */}
               <div
                 class="markdown-body loju-markdown"
