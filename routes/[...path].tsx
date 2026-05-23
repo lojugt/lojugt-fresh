@@ -151,8 +151,8 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 </a>
               </div>
               <div class="loju-page-header-middle">
-                <span class="loju-page-path">
-                  {note ? note.path : "ERROR"}
+                <span class="loju-page-path" title="Toggle drawer">
+                  <span class="loju-drawer-arrow">↑</span>
                 </span>
               </div>
               <div class="loju-page-header-right">

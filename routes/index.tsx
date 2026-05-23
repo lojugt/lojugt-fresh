@@ -122,8 +122,8 @@ export default define.page<typeof handler>(function Home({ data }) {
                   </a>
                 </div>
                 <div class="loju-page-header-middle">
-                  <span class="loju-page-path">
-                    {note.path}
+                  <span class="loju-page-path" title="Toggle drawer">
+                    <span class="loju-drawer-arrow">↑</span>
                   </span>
                 </div>
                 <div class="loju-page-header-right">
