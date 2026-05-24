@@ -127,92 +127,178 @@ export default define.page<typeof handler>(function Home({ data }) {
   return (
     <div class="loju-page">
       <header class="loju-page-header">
-        <details class="loju-header-details">
-          <summary class="loju-header-summary">
-            <div class="loju-page-header-inner">
-              <div class="loju-page-header-left">
-                <a
-                  href="https://loju.ca"
-                  class="loju-brand"
-                  {...{ onclick: "event.stopPropagation();" }}
-                >
-                  LOJU
-                </a>
-              </div>
-              <div class="loju-page-header-middle">
-                <span class="loju-page-path" title="Toggle drawer">
-                  <span class="loju-drawer-arrow">↑</span>
-                </span>
-              </div>
-              <div class="loju-page-header-right">
-                <button
-                  type="button"
-                  class="loju-theme-toggle-btn"
-                  title="Toggle day/night mode"
-                  {...{
-                    onclick:
-                      "event.stopPropagation(); window.toggleLojuTheme();",
-                  }}
-                >
-                  <span class="loju-toggle-icon">🍍</span>
-                  <span id="loju-theme-status">LUX</span>
-                </button>
-              </div>
-            </div>
-          </summary>
-          <div class="loju-header-info-drawer">
-            <div class="loju-drawer-top">
-              <button
-                type="button"
-                class="loju-drawer-copy-btn"
-                {...{
-                  onclick:
-                    "navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)",
-                }}
-              >
-                COPY LINK
-              </button>
-            </div>
-
-            {activeNote.tags && activeNote.tags.length > 0 && (
-              <div class="loju-drawer-section">
-                <span class="loju-drawer-label">TAGS:</span>
-                <div class="loju-drawer-tags-list">
-                  {activeNote.tags.map((tag) => (
-                    <span class="loju-drawer-tag">#{tag}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {relatedNotes.length > 0 && (
-              <div class="loju-drawer-section">
-                <span class="loju-drawer-label">LINKS:</span>
-                <ul class="loju-drawer-links-list">
-                  {relatedNotes.map((relatedNote) => {
-                    const isDirectLink = directPaths.has(
-                      slugifyPath(relatedNote.path),
-                    );
-                    return (
-                      <li>
-                        <a
-                          href={relatedNote.path === "index"
-                            ? "/"
-                            : `/${encodePath(relatedNote.path)}`}
-                        >
-                          {relatedNote.title}
-                        </a>
-                        {!isDirectLink && (
-                          <span class="loju-drawer-link-badge">recent</span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
+        <input
+          type="checkbox"
+          id="loju-drawer-toggle"
+          class="loju-drawer-checkbox"
+          style="display: none;"
+        />
+        <div class="loju-page-header-inner">
+          <div class="loju-page-header-left">
+            <a
+              href="https://loju.ca"
+              class="loju-brand"
+              {...{ onclick: "event.stopPropagation();" }}
+            >
+              LOJU
+            </a>
           </div>
-        </details>
+          <div class="loju-page-header-middle">
+            <label
+              for="loju-drawer-toggle"
+              class="loju-page-path"
+              title="Toggle drawer"
+            >
+              <span class="loju-drawer-gear">⚙️</span>
+              <span class="loju-drawer-close">✕</span>
+            </label>
+          </div>
+          <div class="loju-page-header-right">
+            <button
+              type="button"
+              class="loju-theme-toggle-btn"
+              title="Toggle day/night mode"
+              {...{
+                onclick: "event.stopPropagation(); window.toggleLojuTheme();",
+              }}
+            >
+              <span class="loju-toggle-icon">🍍</span>
+              <span id="loju-theme-status">LUX</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="loju-header-info-drawer">
+          {/* Search container */}
+          <div class="loju-drawer-search-container">
+            <input
+              type="text"
+              id="loju-search-input"
+              placeholder="Search notes..."
+              autocomplete="off"
+              {...{ oninput: "window.runLojuSearch(this.value);" }}
+            />
+            <ul id="loju-search-results" class="loju-search-results-list"></ul>
+          </div>
+
+          <div class="loju-drawer-top">
+            <button
+              type="button"
+              class="loju-drawer-copy-btn"
+              {...{
+                onclick:
+                  "navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)",
+              }}
+            >
+              COPY LINK
+            </button>
+          </div>
+
+          {activeNote.tags && activeNote.tags.length > 0 && (
+            <div class="loju-drawer-section">
+              <span class="loju-drawer-label">TAGS:</span>
+              <div class="loju-drawer-tags-list">
+                {activeNote.tags.map((tag) => (
+                  <span class="loju-drawer-tag">#{tag}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {relatedNotes.length > 0 && (
+            <div class="loju-drawer-section">
+              <span class="loju-drawer-label">LINKS:</span>
+              <ul class="loju-drawer-links-list">
+                {relatedNotes.map((relatedNote) => {
+                  const isDirectLink = directPaths.has(
+                    slugifyPath(relatedNote.path),
+                  );
+                  return (
+                    <li>
+                      <a
+                        href={relatedNote.path === "index"
+                          ? "/"
+                          : `/${encodePath(relatedNote.path)}`}
+                      >
+                        {relatedNote.title}
+                      </a>
+                      {!isDirectLink && (
+                        <span class="loju-drawer-link-badge">recent</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.LOJU_SEARCH_INDEX = ${
+              JSON.stringify(
+                (notes || []).map((n) => ({
+                  title: n.title,
+                  path: n.path === "index" ? "/" : `/${encodePath(n.path)}`,
+                })),
+              )
+            };
+
+            window.runLojuSearch = function(query) {
+              const input = query.trim().toLowerCase();
+              const resultsContainer = document.getElementById("loju-search-results");
+              if (!resultsContainer) return;
+              
+              if (!input) {
+                resultsContainer.innerHTML = "";
+                resultsContainer.style.display = "none";
+                return;
+              }
+              
+              const matches = (window.LOJU_SEARCH_INDEX || [])
+                .filter(n => n.title.toLowerCase().includes(input))
+                .slice(0, 8);
+                
+              if (matches.length === 0) {
+                resultsContainer.innerHTML = '<li class="loju-search-no-match">No matching notes</li>';
+                resultsContainer.style.display = "block";
+                return;
+              }
+              
+              resultsContainer.innerHTML = matches
+                .map(m => \`<li><a href="\${m.path}">\${m.title}</a></li>\`)
+                .join("");
+              resultsContainer.style.display = "block";
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+              const toggle = document.getElementById('loju-drawer-toggle');
+              const searchInput = document.getElementById('loju-search-input');
+              if (toggle && searchInput) {
+                toggle.addEventListener('change', () => {
+                  if (toggle.checked) {
+                    setTimeout(() => searchInput.focus(), 100);
+                  } else {
+                    searchInput.value = '';
+                    window.runLojuSearch('');
+                  }
+                });
+              }
+            });
+
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                const toggle = document.getElementById('loju-drawer-toggle');
+                if (toggle && toggle.checked) {
+                  toggle.checked = false;
+                  toggle.dispatchEvent(new Event('change'));
+                }
+              }
+            });
+          `,
+          }}
+        />
       </header>
 
       <main class="loju-page-main">
