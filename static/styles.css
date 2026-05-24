@@ -555,9 +555,25 @@ html[data-theme="dark"] #loju-search-input:focus {
 }
 
 .loju-drawer-tag {
-  font-size: 0.75rem;
-  color: var(--link-color);
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background-color: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  color: var(--tag-text);
   text-decoration: none;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  transition: all 150ms ease;
+  user-select: none;
+}
+
+.loju-drawer-tag:hover {
+  border-color: var(--link-color);
+  color: var(--link-color);
 }
 
 .loju-drawer-links-list {
@@ -1014,12 +1030,25 @@ mark.highlight,
 }
 
 .loju-feed-item-tag {
-  font-size: 0.7rem;
-  color: var(--link-color);
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background-color: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  color: var(--tag-text);
   text-decoration: none;
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
+  transition: all 150ms ease;
+  user-select: none;
+}
+
+.loju-feed-item-tag:hover {
+  border-color: var(--link-color);
+  color: var(--link-color);
 }
 
 .loju-ghost-link:hover {

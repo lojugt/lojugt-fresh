@@ -290,9 +290,7 @@ export default define.page<typeof handler>(function Home({ data }) {
               const searchInput = document.getElementById('loju-search-input');
               if (toggle && searchInput) {
                 toggle.addEventListener('change', () => {
-                  if (toggle.checked) {
-                    setTimeout(() => searchInput.focus(), 100);
-                  } else {
+                  if (!toggle.checked) {
                     searchInput.value = '';
                     window.runLojuSearch('');
                   }
