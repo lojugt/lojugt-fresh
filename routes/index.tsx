@@ -272,8 +272,15 @@ export default define.page<typeof handler>(function Home({ data }) {
 
             window.copyLojuLink = function(el) {
               navigator.clipboard.writeText(window.location.href);
+              const textEl = el.querySelector('.loju-copy-link-text');
+              if (!textEl) return;
+              
+              const originalText = textEl.innerText;
+              textEl.innerText = 'copied';
               el.classList.add('loju-copied');
+              
               setTimeout(() => {
+                textEl.innerText = originalText;
                 el.classList.remove('loju-copied');
               }, 1500);
             };
