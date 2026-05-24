@@ -195,16 +195,16 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           {note && (
             <>
               <div class="loju-drawer-top">
-                <button
-                  type="button"
-                  class="loju-drawer-copy-btn"
-                  {...{
-                    onclick:
-                      "navigator.clipboard.writeText(window.location.href); this.innerText='LINK COPIED!'; setTimeout(() => this.innerText='COPY LINK', 2000)",
-                  }}
+                <span
+                  class="loju-drawer-copy-link"
+                  title="Click to copy link"
+                  {...{ onclick: "window.copyLojuLink(this);" }}
                 >
-                  COPY LINK
-                </button>
+                  <span class="loju-copy-link-text">
+                    loju.ca/{slugifyPath(note.path)}
+                  </span>
+                  <span class="loju-copy-link-status">🍯</span>
+                </span>
               </div>
 
               {note.tags && note.tags.length > 0 && (
@@ -282,9 +282,17 @@ export default define.page<typeof handler>(function NoteView({ data }) {
               }
               
               resultsContainer.innerHTML = matches
-                .map(m => \`<li><a href="\${m.path}">\${m.title}</a></li>\`)
+                .map(function(m) { return '<li><a href="' + m.path + '">' + m.title + '</a></li>'; })
                 .join("");
               resultsContainer.style.display = "block";
+            };
+
+            window.copyLojuLink = function(el) {
+              navigator.clipboard.writeText(window.location.href);
+              el.classList.add('loju-copied');
+              setTimeout(() => {
+                el.classList.remove('loju-copied');
+              }, 1500);
             };
 
             document.addEventListener('DOMContentLoaded', () => {
