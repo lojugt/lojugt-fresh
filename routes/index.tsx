@@ -149,8 +149,8 @@ export default define.page<typeof handler>(function Home({ data }) {
               class="loju-page-path"
               title="Toggle drawer"
             >
-              <span class="loju-drawer-gear">⚙️</span>
-              <span class="loju-drawer-close">✕</span>
+              <span class="loju-drawer-gear">🪷</span>
+              <span class="loju-drawer-close">💀</span>
             </label>
           </div>
           <div class="loju-page-header-right">
