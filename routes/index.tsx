@@ -134,6 +134,8 @@ export default define.page<typeof handler>(function Home({ data }) {
     }
   }
 
+  const showArticle = note !== null && (hasIndexContent || showVector);
+
   const recentNotes = (notes || [])
     .filter((n) => slugifyPath(n.path) !== "index")
     .sort((a, b) => b.mtime - a.mtime);
@@ -361,7 +363,7 @@ export default define.page<typeof handler>(function Home({ data }) {
       </header>
 
       <main class="loju-page-main">
-        {hasIndexContent && (
+        {showArticle && (
           <article>
             {showVector && (
               <div class="loju-note-vector loju-index-vector">
@@ -377,18 +379,20 @@ export default define.page<typeof handler>(function Home({ data }) {
               </div>
             )}
             {/* Rendered Markdown Body */}
-            <div
-              class="markdown-body loju-markdown"
-              data-color-mode="dark"
-              data-dark-theme="dark"
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
+            {hasIndexContent && (
+              <div
+                class="markdown-body loju-markdown"
+                data-color-mode="dark"
+                data-dark-theme="dark"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+            )}
           </article>
         )}
 
         <section
           class={`loju-index-feed ${
-            !hasIndexContent ? "loju-feed-standalone" : ""
+            !showArticle ? "loju-feed-standalone" : ""
           }`}
         >
           {recentNotes.length > 0
