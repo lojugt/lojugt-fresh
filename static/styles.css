@@ -234,42 +234,32 @@ body {
 
 .loju-page-header-inner {
   width: 100%;
-  padding: 1.2rem 1.5rem;
+  padding: 1.0rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .loju-brand {
-  font-family:
-    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-primary);
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   user-select: none;
 }
 
-.loju-brand:hover {
-  color: var(--text-primary);
-  text-decoration: none;
+.loju-brand img {
+  height: 2.2rem;
+  width: auto;
+  display: block;
 }
 
 .loju-page-path {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  background-color: var(--tag-bg);
-  border: 1px solid var(--tag-border);
   width: 2.2rem;
   height: 2.2rem;
-  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 150ms ease;
+  transition: transform 150ms ease;
   cursor: pointer;
   user-select: none;
   position: relative;
@@ -277,28 +267,19 @@ body {
 }
 
 .loju-page-path:hover {
-  border-color: var(--link-color);
-  color: var(--text-primary);
-}
-
-#loju-drawer-toggle:checked ~ .loju-page-header-inner .loju-page-path {
-  border-color: var(--link-color);
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
+  transform: scale(1.08);
 }
 
 .loju-drawer-gear,
 .loju-drawer-close {
   position: absolute;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  line-height: 1;
   transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease;
+  pointer-events: none;
 }
 
 .loju-drawer-gear {
@@ -323,28 +304,26 @@ body {
 
 .loju-theme-toggle-btn {
   background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 0.2rem 0.5rem;
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 700;
+  border: none;
+  padding: 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  transition: all 150ms ease;
-  border-radius: 4px;
+  justify-content: center;
+  transition: transform 150ms ease;
 }
 
 .loju-theme-toggle-btn:hover {
-  border-color: var(--link-color);
-  color: var(--text-primary);
+  transform: scale(1.08);
 }
 
 .loju-toggle-icon {
   display: inline-block;
+  width: 2.2rem;
+  height: 2.2rem;
   transition: transform 300ms ease;
+  vertical-align: middle;
+  pointer-events: none;
 }
 
 .loju-page-header-left {

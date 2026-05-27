@@ -151,7 +151,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
               class="loju-brand"
               {...{ onclick: "event.stopPropagation();" }}
             >
-              LOJU
+              <img src="/loju.svg" alt="Loju" />
             </a>
           </div>
           <div class="loju-page-header-middle">
@@ -160,8 +160,8 @@ export default define.page<typeof handler>(function NoteView({ data }) {
               class="loju-page-path"
               title="Toggle drawer"
             >
-              <span class="loju-drawer-gear">🪷</span>
-              <span class="loju-drawer-close">💀</span>
+              <img class="loju-drawer-gear" src="/lotusup.svg" alt="Lotus" />
+              <img class="loju-drawer-close" src="/skulldown.svg" alt="Skull" />
             </label>
           </div>
           <div class="loju-page-header-right">
@@ -173,8 +173,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 onclick: "event.stopPropagation(); window.toggleLojuTheme();",
               }}
             >
-              <span class="loju-toggle-icon">🍍</span>
-              <span id="loju-theme-status">LUX</span>
+              <img class="loju-toggle-icon" src="/solar.svg" alt="Theme" />
             </button>
           </div>
         </div>

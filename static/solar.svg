@@ -1,0 +1,18 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  width="100%"
+  height="100%"
+>
+  <path
+    fill="#8A2BE2"
+    fill-rule="evenodd"
+    stroke="none"
+    d="M 40 256 C 120 100 392 100 472 256 C 392 412 120 412 40 256 Z M 256 146 A 110 110 0 1 0 256 366 A 110 110 0 1 0 256 146 Z"
+  />
+  <path
+    fill="#FF2E93"
+    stroke="none"
+    d="M 256 66 L 279 201 L 348 164 L 311 233 L 446 256 L 311 279 L 348 348 L 279 311 L 256 446 L 233 311 L 164 348 L 201 279 L 66 256 L 201 233 L 164 164 L 233 201 Z"
+  />
+</svg>
