@@ -8,7 +8,7 @@
   --link-hover: #6d28d9;
   --border-color: #e5e7eb;
   --border-dashed: #d1d5db;
-  --header-bg: rgba(250, 250, 250, 0.95);
+  --header-bg: #ffffff;
   --header-border: #e5e7eb;
   --code-bg: rgba(243, 244, 246, 0.8);
   --code-text: #b91c1c;
@@ -33,7 +33,7 @@ html[data-theme="dark"] {
   --link-hover: #ff92df;
   --border-color: #222222;
   --border-dashed: #333338;
-  --header-bg: #0e0e10;
+  --header-bg: #000000;
   --header-border: #333338;
   --code-bg: rgba(110, 118, 129, 0.2);
   --code-text: #ff7b72;
