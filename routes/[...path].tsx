@@ -116,10 +116,11 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   );
 
   let htmlContent = "";
+  const isIndex = note && note.path.toLowerCase() === "index";
   if (note) {
     const contentWithoutFrontmatter = stripFrontmatter(note.content);
     const contentWithoutLeadingHeader =
-      contentWithoutFrontmatter.trimStart().startsWith("# ")
+      (!isIndex && contentWithoutFrontmatter.trimStart().startsWith("# "))
         ? contentWithoutFrontmatter.trimStart().replace(
           /^#\s+.*(?:\r?\n|$)/,
           "",
@@ -381,7 +382,11 @@ export default define.page<typeof handler>(function NoteView({ data }) {
           ? (
             <article>
               {showVector && (
-                <div class="loju-note-vector">
+                <div
+                  class={`loju-note-vector ${
+                    isIndex ? "loju-index-vector" : ""
+                  }`}
+                >
                   <img
                     src={`/vectors/${vectorName}.svg`}
                     alt=""
@@ -393,7 +398,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   />
                 </div>
               )}
-              {(() => {
+              {!isIndex && (() => {
                 const pubTimestamp = note.frontmatter?.first_published ||
                   note.ctime;
                 const showPub = !!pubTimestamp;

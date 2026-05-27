@@ -1068,3 +1068,8 @@ mark.highlight,
   display: block;
   pointer-events: none;
 }
+
+.loju-note-vector.loju-index-vector img {
+  width: 6rem;
+  height: 6rem;
+}
