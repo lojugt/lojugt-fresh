@@ -381,6 +381,19 @@ export default define.page<typeof handler>(function NoteView({ data }) {
         {note
           ? (
             <article>
+              {showVector && (
+                <div class="loju-note-vector">
+                  <img
+                    src={`/vectors/${vectorName}.svg`}
+                    alt=""
+                    {...{
+                      "data-visualsearch": "false",
+                      "disable-smart-image": "true",
+                      "msallowcapture": "false",
+                    }}
+                  />
+                </div>
+              )}
               {!isIndex && (() => {
                 const pubTimestamp = note.frontmatter?.first_published ||
                   note.ctime;
@@ -427,19 +440,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 data-dark-theme="dark"
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
-              {showVector && (
-                <div class="loju-note-vector">
-                  <img
-                    src={`/vectors/${vectorName}.svg`}
-                    alt=""
-                    {...{
-                      "data-visualsearch": "false",
-                      "disable-smart-image": "true",
-                      "msallowcapture": "false",
-                    }}
-                  />
-                </div>
-              )}
             </article>
           )
           : <p class="loju-no-data">[NO_NOTE_DATA_AVAILABLE]</p>}

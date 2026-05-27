@@ -363,13 +363,6 @@ export default define.page<typeof handler>(function Home({ data }) {
       <main class="loju-page-main">
         {hasIndexContent && (
           <article>
-            {/* Rendered Markdown Body */}
-            <div
-              class="markdown-body loju-markdown"
-              data-color-mode="dark"
-              data-dark-theme="dark"
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
             {showVector && (
               <div class="loju-note-vector">
                 <img
@@ -383,6 +376,13 @@ export default define.page<typeof handler>(function Home({ data }) {
                 />
               </div>
             )}
+            {/* Rendered Markdown Body */}
+            <div
+              class="markdown-body loju-markdown"
+              data-color-mode="dark"
+              data-dark-theme="dark"
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
           </article>
         )}
 
