@@ -641,6 +641,18 @@ html[data-theme="dark"] #loju-search-input:focus {
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--border-color);
   text-align: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.loju-note-header-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .loju-note-tags {
@@ -1036,14 +1048,16 @@ mark.highlight,
 
 /* Featured Note Vector Graphic */
 .loju-note-vector {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 auto;
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
 }
 
 .loju-note-vector img {
-  height: 6rem;
+  height: 5rem;
   width: auto;
   display: block;
 }

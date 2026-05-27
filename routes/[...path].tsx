@@ -374,30 +374,33 @@ export default define.page<typeof handler>(function NoteView({ data }) {
 
                 return (
                   <header class="loju-note-meta-header">
-                    <h1 class="loju-note-title">{note.title}</h1>
+                    <div class="loju-note-header-content">
+                      <h1 class="loju-note-title">{note.title}</h1>
+                      <div class="loju-note-meta">
+                        {isSameDay || !showPub
+                          ? (
+                            <span>
+                              PUBLISHED:{" "}
+                              {formatDate(pubTimestamp || note.mtime)}
+                            </span>
+                          )
+                          : (
+                            <>
+                              <span>
+                                EDITED: {formatDate(note.mtime)}
+                              </span>
+                              <span>
+                                PUBLISHED: {formatDate(pubTimestamp!)}
+                              </span>
+                            </>
+                          )}
+                      </div>
+                    </div>
                     {showVector && (
                       <div class="loju-note-vector">
                         <img src={`/vectors/${vectorName}.svg`} alt="" />
                       </div>
                     )}
-                    <div class="loju-note-meta">
-                      {isSameDay || !showPub
-                        ? (
-                          <span>
-                            PUBLISHED: {formatDate(pubTimestamp || note.mtime)}
-                          </span>
-                        )
-                        : (
-                          <>
-                            <span>
-                              EDITED: {formatDate(note.mtime)}
-                            </span>
-                            <span>
-                              PUBLISHED: {formatDate(pubTimestamp!)}
-                            </span>
-                          </>
-                        )}
-                    </div>
                   </header>
                 );
               })()}
