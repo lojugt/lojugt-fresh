@@ -112,8 +112,17 @@ export default define.page<typeof handler>(function Home({ data }) {
   const hasIndexContent = note &&
     stripFrontmatter(note.content).trim().length > 0;
   if (hasIndexContent) {
+    const contentWithoutFrontmatter = stripFrontmatter(note.content);
+    const contentWithoutLeadingHeader =
+      contentWithoutFrontmatter.trimStart().startsWith("# ")
+        ? contentWithoutFrontmatter.trimStart().replace(
+          /^#\s+.*(?:\r?\n|$)/,
+          "",
+        )
+        : contentWithoutFrontmatter;
+
     const cleanMarkdown = processMarkdownFeatures(
-      stripFrontmatter(note.content),
+      contentWithoutLeadingHeader,
       notes || [],
     );
     const rawHtml = render(cleanMarkdown);
@@ -376,6 +385,45 @@ export default define.page<typeof handler>(function Home({ data }) {
                 />
               </div>
             )}
+            {(() => {
+              const pubTimestamp = activeNote.frontmatter?.first_published ||
+                activeNote.ctime;
+              const showPub = !!pubTimestamp;
+              const pubDate = pubTimestamp ? new Date(pubTimestamp) : null;
+              const editDate = new Date(activeNote.mtime);
+
+              const isSameDay = pubDate &&
+                pubDate.getFullYear() === editDate.getFullYear() &&
+                pubDate.getMonth() === editDate.getMonth() &&
+                pubDate.getDate() === editDate.getDate();
+
+              return (
+                <header class="loju-note-meta-header">
+                  <div class="loju-note-header-content">
+                    <h1 class="loju-note-title">{activeNote.title}</h1>
+                    <div class="loju-note-meta">
+                      {isSameDay || !showPub
+                        ? (
+                          <span>
+                            PUBLISHED:{" "}
+                            {formatDate(pubTimestamp || activeNote.mtime)}
+                          </span>
+                        )
+                        : (
+                          <>
+                            <span>
+                              EDITED: {formatDate(activeNote.mtime)}
+                            </span>
+                            <span>
+                              PUBLISHED: {formatDate(pubTimestamp!)}
+                            </span>
+                          </>
+                        )}
+                    </div>
+                  </div>
+                </header>
+              );
+            })()}
             {/* Rendered Markdown Body */}
             <div
               class="markdown-body loju-markdown"

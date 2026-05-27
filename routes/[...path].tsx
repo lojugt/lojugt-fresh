@@ -116,11 +116,10 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   );
 
   let htmlContent = "";
-  const isIndex = note && note.path.toLowerCase() === "index";
   if (note) {
     const contentWithoutFrontmatter = stripFrontmatter(note.content);
     const contentWithoutLeadingHeader =
-      (!isIndex && contentWithoutFrontmatter.trimStart().startsWith("# "))
+      contentWithoutFrontmatter.trimStart().startsWith("# ")
         ? contentWithoutFrontmatter.trimStart().replace(
           /^#\s+.*(?:\r?\n|$)/,
           "",
@@ -394,7 +393,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   />
                 </div>
               )}
-              {!isIndex && (() => {
+              {(() => {
                 const pubTimestamp = note.frontmatter?.first_published ||
                   note.ctime;
                 const showPub = !!pubTimestamp;
