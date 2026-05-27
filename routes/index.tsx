@@ -439,7 +439,6 @@ export default define.page<typeof handler>(function Home({ data }) {
             !hasIndexContent ? "loju-feed-standalone" : ""
           }`}
         >
-          <h2 class="loju-feed-title">RECENTLY UPDATED</h2>
           {recentNotes.length > 0
             ? (
               <div class="loju-feed-list">

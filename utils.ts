@@ -27,13 +27,25 @@ export interface Note {
 }
 
 export function formatDate(timestamp: number | string): string {
-  return new Date(timestamp).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const date = new Date(timestamp);
+  const diff = Date.now() - date.getTime();
+  const within24Hours = Math.abs(diff) < 24 * 60 * 60 * 1000;
+
+  if (within24Hours) {
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } else {
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
 }
 
 export function stripFrontmatter(content: string): string {
