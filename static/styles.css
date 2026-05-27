@@ -629,9 +629,9 @@ html[data-theme="dark"] #loju-search-input:focus {
 
 .loju-page-main {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 1.5rem auto 0;
   padding: 0;
-  min-height: calc(100vh - 10rem);
+  min-height: calc(100vh - 11.5rem);
 }
 
 .loju-note-meta-header {
@@ -639,7 +639,6 @@ html[data-theme="dark"] #loju-search-input:focus {
   padding-top: 0;
   margin-bottom: 0.8rem;
   padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--header-divider-color);
   text-align: left;
   position: relative;
   padding-left: 1.5rem;
@@ -1066,4 +1065,12 @@ mark.highlight,
 .loju-note-vector.loju-index-vector img {
   width: 6rem;
   height: 6rem;
+}
+
+/* Hide Deno GFM automatic anchor links on headers */
+.markdown-body .anchor,
+.markdown-body .octicon-link,
+.loju-markdown .anchor,
+.loju-markdown .octicon-link {
+  display: none !important;
 }
