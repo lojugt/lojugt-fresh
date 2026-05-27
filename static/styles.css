@@ -22,6 +22,7 @@
   --tag-bg: #f3f4f6;
   --tag-text: #4b5563;
   --tag-border: #d1d5db;
+  --header-divider-color: #ff79c6;
 }
 
 html[data-theme="dark"] {
@@ -46,6 +47,7 @@ html[data-theme="dark"] {
   --tag-bg: #111111;
   --tag-text: #aaaaaa;
   --tag-border: #444444;
+  --header-divider-color: #7c3aed;
 }
 
 body, html {
@@ -217,7 +219,7 @@ body {
 }
 
 .loju-page-header {
-  border-top: 1px solid var(--header-border);
+  border-top: 1px solid var(--header-divider-color);
   background-color: var(--header-bg);
   backdrop-filter: blur(12px);
   position: fixed;
@@ -371,7 +373,7 @@ body {
   background-color: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--header-border);
+  border-top: 1px solid var(--header-divider-color);
   border-left: 1px solid var(--header-border);
   border-right: 1px solid var(--header-border);
   display: flex;
@@ -639,7 +641,7 @@ html[data-theme="dark"] #loju-search-input:focus {
   padding-top: 0;
   margin-bottom: 0.8rem;
   padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--header-divider-color);
   text-align: left;
   display: flex;
   flex-direction: row;
