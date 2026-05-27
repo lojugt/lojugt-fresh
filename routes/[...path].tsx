@@ -151,7 +151,7 @@ export default define.page<typeof handler>(function NoteView({ data }) {
               class="loju-brand"
               {...{ onclick: "event.stopPropagation();" }}
             >
-              <img src="/loju.svg" alt="Loju" />
+              <img src="/vectors/loju.svg" alt="Loju" />
             </a>
           </div>
           <div class="loju-page-header-middle">
@@ -160,8 +160,16 @@ export default define.page<typeof handler>(function NoteView({ data }) {
               class="loju-page-path"
               title="Toggle drawer"
             >
-              <img class="loju-drawer-gear" src="/lotusup.svg" alt="Lotus" />
-              <img class="loju-drawer-close" src="/skulldown.svg" alt="Skull" />
+              <img
+                class="loju-drawer-gear"
+                src="/vectors/lotusup.svg"
+                alt="Lotus"
+              />
+              <img
+                class="loju-drawer-close"
+                src="/vectors/skulldown.svg"
+                alt="Skull"
+              />
             </label>
           </div>
           <div class="loju-page-header-right">
@@ -173,7 +181,11 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 onclick: "event.stopPropagation(); window.toggleLojuTheme();",
               }}
             >
-              <img class="loju-toggle-icon" src="/solar.svg" alt="Theme" />
+              <img
+                class="loju-toggle-icon"
+                src="/vectors/solar.svg"
+                alt="Theme"
+              />
             </button>
           </div>
         </div>
@@ -344,9 +356,30 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   pubDate.getMonth() === editDate.getMonth() &&
                   pubDate.getDate() === editDate.getDate();
 
+                const vectorName = note.frontmatter?.vector;
+                let showVector = false;
+                if (
+                  vectorName && typeof vectorName === "string" &&
+                  /^[a-zA-Z0-9_-]+$/.test(vectorName)
+                ) {
+                  try {
+                    const stat = Deno.statSync(
+                      `./static/vectors/${vectorName}.svg`,
+                    );
+                    showVector = stat.isFile;
+                  } catch {
+                    // ignore
+                  }
+                }
+
                 return (
                   <header class="loju-note-meta-header">
                     <h1 class="loju-note-title">{note.title}</h1>
+                    {showVector && (
+                      <div class="loju-note-vector">
+                        <img src={`/vectors/${vectorName}.svg`} alt="" />
+                      </div>
+                    )}
                     <div class="loju-note-meta">
                       {isSameDay || !showPub
                         ? (

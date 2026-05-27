@@ -1033,3 +1033,17 @@ mark.highlight,
 .loju-ghost-link:hover {
   text-decoration: none;
 }
+
+/* Featured Note Vector Graphic */
+.loju-note-vector {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.loju-note-vector img {
+  height: 6rem;
+  width: auto;
+  display: block;
+}

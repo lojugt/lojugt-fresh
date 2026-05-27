@@ -98,7 +98,7 @@ export default define.page(function App({ Component, state }) {
             
             const iconEl = document.querySelector('.loju-toggle-icon');
             if (iconEl) {
-              iconEl.src = theme === 'dark' ? '/pi.svg' : '/solar.svg';
+              iconEl.src = theme === 'dark' ? '/vectors/pi.svg' : '/vectors/solar.svg';
               iconEl.style.transform = 'scale(1.2) rotate(360deg)';
               setTimeout(() => {
                 iconEl.style.transform = '';

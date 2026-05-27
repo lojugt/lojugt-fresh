@@ -140,7 +140,7 @@ export default define.page<typeof handler>(function Home({ data }) {
               class="loju-brand"
               {...{ onclick: "event.stopPropagation();" }}
             >
-              <img src="/loju.svg" alt="Loju" />
+              <img src="/vectors/loju.svg" alt="Loju" />
             </a>
           </div>
           <div class="loju-page-header-middle">
@@ -149,8 +149,16 @@ export default define.page<typeof handler>(function Home({ data }) {
               class="loju-page-path"
               title="Toggle drawer"
             >
-              <img class="loju-drawer-gear" src="/lotusup.svg" alt="Lotus" />
-              <img class="loju-drawer-close" src="/skulldown.svg" alt="Skull" />
+              <img
+                class="loju-drawer-gear"
+                src="/vectors/lotusup.svg"
+                alt="Lotus"
+              />
+              <img
+                class="loju-drawer-close"
+                src="/vectors/skulldown.svg"
+                alt="Skull"
+              />
             </label>
           </div>
           <div class="loju-page-header-right">
@@ -162,7 +170,11 @@ export default define.page<typeof handler>(function Home({ data }) {
                 onclick: "event.stopPropagation(); window.toggleLojuTheme();",
               }}
             >
-              <img class="loju-toggle-icon" src="/solar.svg" alt="Theme" />
+              <img
+                class="loju-toggle-icon"
+                src="/vectors/solar.svg"
+                alt="Theme"
+              />
             </button>
           </div>
         </div>
