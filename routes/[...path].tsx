@@ -135,6 +135,20 @@ export default define.page<typeof handler>(function NoteView({ data }) {
     htmlContent = processLinks(rawHtml, notes || []);
   }
 
+  const vectorName = note?.frontmatter?.vector;
+  let showVector = false;
+  if (
+    vectorName && typeof vectorName === "string" &&
+    /^[a-zA-Z0-9_-]+$/.test(vectorName)
+  ) {
+    try {
+      const stat = Deno.statSync(`./static/vectors/${vectorName}.svg`);
+      showVector = stat.isFile;
+    } catch {
+      // ignore
+    }
+  }
+
   return (
     <div class="loju-page">
       <header class="loju-page-header">
@@ -356,22 +370,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                   pubDate.getMonth() === editDate.getMonth() &&
                   pubDate.getDate() === editDate.getDate();
 
-                const vectorName = note.frontmatter?.vector;
-                let showVector = false;
-                if (
-                  vectorName && typeof vectorName === "string" &&
-                  /^[a-zA-Z0-9_-]+$/.test(vectorName)
-                ) {
-                  try {
-                    const stat = Deno.statSync(
-                      `./static/vectors/${vectorName}.svg`,
-                    );
-                    showVector = stat.isFile;
-                  } catch {
-                    // ignore
-                  }
-                }
-
                 return (
                   <header class="loju-note-meta-header">
                     <div class="loju-note-header-content">
@@ -396,11 +394,6 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                           )}
                       </div>
                     </div>
-                    {showVector && (
-                      <div class="loju-note-vector">
-                        <img src={`/vectors/${vectorName}.svg`} alt="" />
-                      </div>
-                    )}
                   </header>
                 );
               })()}
@@ -411,6 +404,11 @@ export default define.page<typeof handler>(function NoteView({ data }) {
                 data-dark-theme="dark"
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
+              {showVector && (
+                <div class="loju-note-vector">
+                  <img src={`/vectors/${vectorName}.svg`} alt="" />
+                </div>
+              )}
             </article>
           )
           : <p class="loju-no-data">[NO_NOTE_DATA_AVAILABLE]</p>}

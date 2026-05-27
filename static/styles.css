@@ -1045,18 +1045,13 @@ mark.highlight,
 
 /* Featured Note Vector Graphic */
 .loju-note-vector {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
   margin: 0;
   padding: 0;
-  pointer-events: none;
-  z-index: 1;
+  width: 100%;
 }
 
 .loju-note-vector img {
-  height: 5rem;
-  width: auto;
+  width: 100%;
+  height: auto;
   display: block;
 }

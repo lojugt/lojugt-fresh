@@ -120,6 +120,20 @@ export default define.page<typeof handler>(function Home({ data }) {
     htmlContent = processLinks(rawHtml, notes || []);
   }
 
+  const vectorName = activeNote.frontmatter?.vector;
+  let showVector = false;
+  if (
+    vectorName && typeof vectorName === "string" &&
+    /^[a-zA-Z0-9_-]+$/.test(vectorName)
+  ) {
+    try {
+      const stat = Deno.statSync(`./static/vectors/${vectorName}.svg`);
+      showVector = stat.isFile;
+    } catch {
+      // ignore
+    }
+  }
+
   const recentNotes = (notes || [])
     .filter((n) => slugifyPath(n.path) !== "index")
     .sort((a, b) => b.mtime - a.mtime);
@@ -333,6 +347,11 @@ export default define.page<typeof handler>(function Home({ data }) {
               data-dark-theme="dark"
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
+            {showVector && (
+              <div class="loju-note-vector">
+                <img src={`/vectors/${vectorName}.svg`} alt="" />
+              </div>
+            )}
           </article>
         )}
 
