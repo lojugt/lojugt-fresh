@@ -648,6 +648,8 @@ html[data-theme="dark"] #loju-search-input:focus {
 
 .loju-note-header-content {
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .loju-note-tags {
@@ -1050,6 +1052,7 @@ mark.highlight,
   margin: 0;
   padding: 0;
   pointer-events: none;
+  z-index: 1;
 }
 
 .loju-note-vector img {
