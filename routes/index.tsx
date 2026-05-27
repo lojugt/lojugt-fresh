@@ -154,7 +154,15 @@ export default define.page<typeof handler>(function Home({ data }) {
               class="loju-brand"
               {...{ onclick: "event.stopPropagation();" }}
             >
-              <img src="/vectors/loju.svg" alt="Loju" />
+              <img
+                src="/vectors/loju.svg"
+                alt="Loju"
+                {...{
+                  "data-visualsearch": "false",
+                  "disable-smart-image": "true",
+                  "msallowcapture": "false",
+                }}
+              />
             </a>
           </div>
           <div class="loju-page-header-middle">
@@ -167,11 +175,21 @@ export default define.page<typeof handler>(function Home({ data }) {
                 class="loju-drawer-gear"
                 src="/vectors/lotusup.svg"
                 alt="Lotus"
+                {...{
+                  "data-visualsearch": "false",
+                  "disable-smart-image": "true",
+                  "msallowcapture": "false",
+                }}
               />
               <img
                 class="loju-drawer-close"
                 src="/vectors/skulldown.svg"
                 alt="Skull"
+                {...{
+                  "data-visualsearch": "false",
+                  "disable-smart-image": "true",
+                  "msallowcapture": "false",
+                }}
               />
             </label>
           </div>
@@ -188,6 +206,11 @@ export default define.page<typeof handler>(function Home({ data }) {
                 class="loju-toggle-icon"
                 src="/vectors/solar.svg"
                 alt="Theme"
+                {...{
+                  "data-visualsearch": "false",
+                  "disable-smart-image": "true",
+                  "msallowcapture": "false",
+                }}
               />
             </button>
           </div>
@@ -349,7 +372,15 @@ export default define.page<typeof handler>(function Home({ data }) {
             />
             {showVector && (
               <div class="loju-note-vector">
-                <img src={`/vectors/${vectorName}.svg`} alt="" />
+                <img
+                  src={`/vectors/${vectorName}.svg`}
+                  alt=""
+                  {...{
+                    "data-visualsearch": "false",
+                    "disable-smart-image": "true",
+                    "msallowcapture": "false",
+                  }}
+                />
               </div>
             )}
           </article>

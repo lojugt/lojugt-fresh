@@ -253,6 +253,7 @@ body {
   height: 2.2rem;
   width: auto;
   display: block;
+  pointer-events: none;
 }
 
 .loju-page-path {
@@ -633,7 +634,10 @@ html[data-theme="dark"] #loju-search-input:focus {
 .loju-page-main {
   max-width: 500px;
   margin: 3rem auto 0;
-  padding: 0 1.5rem;
+  padding: 0;
+  border-left: 1px solid var(--header-border);
+  border-right: 1px solid var(--header-border);
+  min-height: calc(100vh - 3rem - 10rem);
 }
 
 .loju-note-meta-header {
@@ -644,6 +648,8 @@ html[data-theme="dark"] #loju-search-input:focus {
   border-bottom: 1px solid var(--header-divider-color);
   text-align: left;
   position: relative;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .loju-note-header-content {
@@ -722,6 +728,7 @@ html[data-theme="dark"] #loju-search-input:focus {
   line-height: 1.8;
   max-width: 500px;
   margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 .loju-markdown h1,
@@ -920,6 +927,7 @@ mark.highlight,
 .loju-no-data {
   color: #777777;
   font-size: 0.75rem;
+  padding: 0 1.5rem;
 }
 
 .loju-ghost-link {
@@ -938,6 +946,8 @@ mark.highlight,
   padding-top: 2rem;
   border-top: 1px solid var(--border-color);
   text-align: left;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .loju-index-feed.loju-feed-standalone {
@@ -1054,4 +1064,5 @@ mark.highlight,
   width: 100%;
   height: auto;
   display: block;
+  pointer-events: none;
 }
