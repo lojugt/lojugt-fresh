@@ -119,16 +119,8 @@ export default define.page<typeof handler>(function NoteView({ data }) {
   const isIndex = note && note.path.toLowerCase() === "index";
   if (note) {
     const contentWithoutFrontmatter = stripFrontmatter(note.content);
-    const contentWithoutLeadingHeader =
-      (!isIndex && contentWithoutFrontmatter.trimStart().startsWith("# "))
-        ? contentWithoutFrontmatter.trimStart().replace(
-          /^#\s+.*(?:\r?\n|$)/,
-          "",
-        )
-        : contentWithoutFrontmatter;
-
     const cleanMarkdown = processMarkdownFeatures(
-      contentWithoutLeadingHeader,
+      contentWithoutFrontmatter,
       notes || [],
     );
     const rawHtml = render(cleanMarkdown);
